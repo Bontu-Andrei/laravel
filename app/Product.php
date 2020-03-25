@@ -17,4 +17,11 @@ class Product extends Model
     {
         return $this->belongsToMany(Order::class, 'order_product', 'product_id', 'order_id');
     }
+
+    public function getImageUrlAttribute()
+    {
+        return $this->image_path
+            ? $this->image_path
+            : '/storage/images/default.jpg';
+    }
 }
