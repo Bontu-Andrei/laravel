@@ -2,6 +2,8 @@
 
 return [
 
+    'training' => 'Training',
+
     'pageName' => [
         'index' => 'Index',
         'cart' => 'Cart',

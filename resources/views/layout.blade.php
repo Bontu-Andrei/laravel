@@ -91,22 +91,11 @@
 @if($page !== 'home')
     <header class="navbar">
         <nav class="links">
-            <a href="/index">Index</a>
-            <a href="/cart">Cart</a>
-            <a href="/products">Products</a>
-            <a href="/orders">Orders</a>
+            <a href="{{ route('index') }}">{{ __('view.pageName.index') }}</a>
+            <a href="#">{{ __('view.pageName.cart') }}</a>
+            <a href="#">{{ __('view.pageName.products') }}</a>
+            <a href="#">{{ __('view.pageName.orders') }}</a>
         </nav>
-
-{{--        @if(session()->has('admin'))--}}
-{{--            <div style="display: flex; padding: 0 25px;">--}}
-{{--                <span>{{ Helper::trans('Welcome,') }} {{ env('ADMIN_USERNAME') }}</span>--}}
-
-{{--                <form action="/logout" method="post" style="margin-left: 15px;">--}}
-{{--                    @csrf--}}
-{{--                    <button type="submit">{{ Helper::trans('Logout') }}</button>--}}
-{{--                </form>--}}
-{{--            </div>--}}
-{{--        @endif--}}
     </header>
 @endif
 
