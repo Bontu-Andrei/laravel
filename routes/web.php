@@ -19,4 +19,8 @@ Route::get('/', function () {
 
 Route::get('/index', 'IndexController@index')->name('index');
 
+Route::get('/cart', 'CartController@index')->name('cart');
+Route::post('/cart/{productId}', 'CartProductController@store')->name('cart.store');
+Route::delete('/cart/{productId}', 'CartProductController@destroy')->name('cart.destroy');
+
 

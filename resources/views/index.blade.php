@@ -24,7 +24,7 @@
                 </div>
             </div>
 
-            <form action="#" method="post">
+            <form action="{{ route('cart.store', ['productId' => $product->id]) }}" method="post">
                 @csrf
                 <button type="submit">{{ __('view.add') }}</button>
             </form>

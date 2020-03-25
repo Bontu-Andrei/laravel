@@ -20,7 +20,18 @@ return [
     ],
 
     'add' => 'Add to cart',
+    'delete' => 'Delete',
+    'checkout' => 'Checkout',
     'review' => 'Reviews',
+
+    'empty' => 'No products in cart yet.',
+
+    'placeholder' => [
+      'name' => 'Name',
+      'contact' => 'Contact Details',
+      'comments' => 'Comments',
+
+    ],
 
 
 ];

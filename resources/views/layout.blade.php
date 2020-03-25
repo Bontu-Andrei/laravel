@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Laravel</title>
+    <title>{{ __('view.training') }}</title>
 
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
@@ -92,7 +92,7 @@
     <header class="navbar">
         <nav class="links">
             <a href="{{ route('index') }}">{{ __('view.pageName.index') }}</a>
-            <a href="#">{{ __('view.pageName.cart') }}</a>
+            <a href="{{ route('cart') }}">{{ __('view.pageName.cart') }}</a>
             <a href="#">{{ __('view.pageName.products') }}</a>
             <a href="#">{{ __('view.pageName.orders') }}</a>
         </nav>
