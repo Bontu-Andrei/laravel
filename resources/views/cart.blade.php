@@ -8,7 +8,7 @@
         <div class="container">
             @foreach($products as $product)
                 <div class="product">
-                    <div style="display: flex;">
+                    <div style="display: flex; margin: 5px;">
                         <img src="{{ $product->image_url }}" alt="{{ __('view.image_alt') }}" width="100px;"
                              height="100px;">
                     </div>
@@ -27,16 +27,18 @@
                         </div>
                     </div>
 
-                    <form action="{{ route('cart.destroy', ['productId' => $product->id]) }}" method="post">
-                        @csrf
-                        @method('delete')
+                    <div style="margin: 5px;">
+                        <form action="{{ route('cart.destroy', ['productId' => $product->id]) }}" method="post">
+                            @csrf
+                            @method('delete')
 
-                        <button type="submit">{{ __('view.delete') }}</button>
-                    </form>
+                            <button type="submit">{{ __('view.delete') }}</button>
+                        </form>
+                    </div>
                 </div>
             @endforeach
 
-            <form action="#" method="post">
+            <form action="{{ route('checkout') }}" method="post">
                 @csrf
                 <div style="width: 70%; margin: 10px auto;">
                     <input type="text"

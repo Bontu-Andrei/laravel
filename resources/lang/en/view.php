@@ -12,6 +12,7 @@ return [
     ],
 
     'image_alt' => 'product_image',
+    'image' => 'Product Image',
 
     'label' => [
         'title' => 'Title',
@@ -32,6 +33,14 @@ return [
       'comments' => 'Comments',
 
     ],
+
+    // Mail section
+    'thanks' => 'Thanks for your order',
+    'details' => 'Your contact details',
+    'comments' => 'Comments',
+    'back' => 'Back to site',
+    'thank' =>'Thank you',
+
 
 
 ];

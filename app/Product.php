@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class Product extends Model
 {
@@ -23,5 +24,20 @@ class Product extends Model
         return $this->image_path
             ? $this->image_path
             : '/storage/images/default.jpg';
+    }
+
+    public function getImageEncoding()
+    {
+        if (Storage::exists($this->image_path)) {
+            $file = Storage::get($this->image_path);
+
+            if ( ! $file) {
+                return '';
+            }
+
+            return 'data:image/jpg;base64,'.base64_encode($file);
+        }
+
+        return '';
     }
 }
