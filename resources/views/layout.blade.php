@@ -96,6 +96,18 @@
             <a href="#">{{ __('view.pageName.products') }}</a>
             <a href="#">{{ __('view.pageName.orders') }}</a>
         </nav>
+
+        @if(session()->has('admin'))
+            <div style="display: flex; padding: 0 25px;">
+                <span>{{ __('view.welcome') }} {{ config('admin.name') }}</span>
+
+                <form action="{{ route('logout') }}" method="post" style="margin-left: 15px;">
+                    @csrf
+                    @method('delete')
+                    <button type="submit">{{ __('view.logout') }}</button>
+                </form>
+            </div>
+        @endif
     </header>
 @endif
 

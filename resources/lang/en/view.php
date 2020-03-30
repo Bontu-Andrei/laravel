@@ -24,14 +24,17 @@ return [
     'delete' => 'Delete',
     'checkout' => 'Checkout',
     'review' => 'Reviews',
+    'login' => 'Login',
+    'logout' => 'Logout',
 
     'empty' => 'No products in cart yet.',
+    'welcome' => 'Welcome, ',
 
     'placeholder' => [
-      'name' => 'Name',
-      'contact' => 'Contact Details',
-      'comments' => 'Comments',
-
+        'name' => 'Name',
+        'contact' => 'Contact Details',
+        'comments' => 'Comments',
+        'password' => 'Password'
     ],
 
     // Mail section

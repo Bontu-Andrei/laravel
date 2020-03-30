@@ -25,4 +25,8 @@ Route::delete('/cart/{productId}', 'CartProductController@destroy')->name('cart.
 
 Route::post('/checkout', 'CheckoutController@store')->name('checkout');
 
+Route::get('/login', 'LoginController@index')->name('login');
+Route::post('/login', 'LoginController@store')->name('login.store');
+Route::delete('/logout', 'LoginController@destroy')->name('logout');
+
 

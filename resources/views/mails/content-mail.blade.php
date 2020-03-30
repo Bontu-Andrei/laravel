@@ -1,9 +1,9 @@
 @component('mail::message')
-# {{ __('view.thanks') }} {{ $data['customer_name'] }}
+# {{ __('view.thanks') }}: {{ $data['customer_name'] }}
 
-## {{ __('view.details') }} {{ $data['contact_details'] }}
+## {{ __('view.details') }}: {{ $data['contact_details'] }}
 
-### {{ __('view.comments') }} {{ $data['customer_comments'] }}
+### {{ __('view.comments') }}: {{ $data['customer_comments'] }}
 
 @component('mail::table')
 | {{ __('view.image') }} | {{ __('view.label.title') }} | {{ __('view.label.description') }} | {{ __('view.label.price') }} |
