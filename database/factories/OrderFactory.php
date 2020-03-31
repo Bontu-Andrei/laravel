@@ -10,7 +10,6 @@ $factory->define(Order::class, function (Faker $faker) {
         'customer_name' => $faker->name,
         'customer_details' => $faker->sentence,
         'customer_comments' => $faker->paragraph,
-        'creation_date' => $faker->date(),
         'product_price_sum' =>$faker->numerify(),
     ];
 });

@@ -10,9 +10,5 @@ $factory->define(Review::class, function (Faker $faker) {
         'title' => $faker->sentence,
         'rating' => $faker->numberBetween(1, 5),
         'description' => $faker->paragraph,
-        'product_id' => function () {
-            // we need to do like this with func because it is called after we check if override value was passed
-            return factory(\App\Product::class)->create()->id;
-        },
     ];
 });

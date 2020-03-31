@@ -11,10 +11,8 @@ class ReviewsSeeder extends Seeder
      */
     public function run()
     {
-        $product = factory(\App\Product::class)->create();
-
-        factory(App\Review::class, 5)->create([
-            'product_id' => $product->id,
-        ]);
+        \App\Product::all()->each(function ($product) {
+            $product->reviews()->saveMany(factory(\App\Review::class, 5)->make());
+        });
     }
 }

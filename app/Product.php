@@ -9,7 +9,7 @@ class Product extends Model
 {
     protected $fillable = ['title', 'description', 'price', 'image_path'];
 
-    public $appends = ['image_url'];
+    public $appends = ['image_url', 'encoded_image'];
 
     public function reviews()
     {
@@ -23,12 +23,10 @@ class Product extends Model
 
     public function getImageUrlAttribute()
     {
-        return $this->image_path
-            ? "/storage/images/{$this->image_path}"
-            : '/storage/images/default.jpg';
+        return url('/storage/images').'/'.($this->image_path ?: 'default.jpg');
     }
 
-    public function getImageEncoding()
+    public function getEncodedImageAttribute()
     {
         if (Storage::exists('images/')) {
             $file = Storage::get("images/{$this->image_path}");

@@ -12,7 +12,7 @@ class OrdersSeeder extends Seeder
     public function run()
     {
         factory(App\Order::class, 10)->create()->each(function ($order) {
-            $order->products()->saveMany(factory(\App\Product::class, 3)->create());
+            $order->products()->saveMany(\App\Product::all()->random(3));
         });
     }
 }

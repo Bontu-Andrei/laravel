@@ -19,7 +19,6 @@ class CreateOrdersTable extends Migration
             $table->string('customer_name');
             $table->string('customer_details');
             $table->text('customer_comments');
-            $table->timestamp('creation_date');
             $table->decimal('product_price_sum');
 
             $table->timestamps();

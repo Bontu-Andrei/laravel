@@ -10,6 +10,6 @@ $factory->define(Product::class, function (Faker $faker) {
         'title' => $faker->sentence,
         'description' => $faker->paragraph,
         'price' => $faker->randomDigit,
-        'image_path' => $faker->imageUrl('100', '100'),
+        'image_path' => 'default.jpg',
     ];
 });

@@ -9,7 +9,7 @@
 | {{ __('view.image') }} | {{ __('view.label.title') }} | {{ __('view.label.description') }} | {{ __('view.label.price') }} |
 | :-------------------------: | :---------------------: | :---------------------------: | :-----------------------:
 @foreach($products as $product)
-| <img src="{{ $product->getImageEncoding() }}" alt="{{ __('view.image_alt') }}" width="100px" height="100px"> | {{ $product['title'] }} | {{ $product['description'] }} | {{ $product['price'] }} |
+| <img src="{{ $product['encoded_image'] }}" alt="{{ __('view.image_alt') }}" width="100px" height="100px"> | {{ $product['title'] }} | {{ $product['description'] }} | {{ $product['price'] }} |
 @endforeach
 @endcomponent
 
