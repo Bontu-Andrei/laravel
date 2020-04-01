@@ -1,12 +1,15 @@
 @extends('layout')
 
-@section('content')
+@section('navigation')
+    @include('partials.navigation')
+@endsection
 
+@section('content')
     <h1 class="flex-center">{{ __('view.pageName.cart') }}</h1>
 
-    @if(!empty(session('cart')))
+    @if (!empty(session('cart')))
         <div class="container">
-            @foreach($products as $product)
+            @foreach ($products as $product)
                 <div class="product">
                     <div style="display: flex; margin: 5px;">
                         <img src="{{ $product->image_url }}" alt="{{ __('view.image_alt') }}" width="100px;"
@@ -15,15 +18,15 @@
 
                     <div>
                         <div>
-                            <b>{{ __('view.label.title') }}</b> {{ __($product->title) }}
+                            <b>{{ __('view.label.title') }}</b> {{ $product->title }}
                         </div>
 
                         <div>
-                            <b>{{ __('view.label.description') }}</b> {{ __($product->description) }}
+                            <b>{{ __('view.label.description') }}</b> {{ $product->description }}
                         </div>
 
                         <div>
-                            <b>{{ __('view.label.price') }}</b> {{ __($product->price) }}
+                            <b>{{ __('view.label.price') }}</b> {{ $product->price }}
                         </div>
                     </div>
 

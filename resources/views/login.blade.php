@@ -1,5 +1,9 @@
 @extends('layout')
 
+@section('navigation')
+    @include('partials.navigation')
+@endsection
+
 @section('content')
     <div class="flex-center" style="margin: 30px auto; width: 50%;">
         <form action="{{ route('login.store') }}" method="post">

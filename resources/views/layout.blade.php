@@ -86,18 +86,10 @@
     </style>
 </head>
 <body>
-@php $page = isset($page) ? $page : ''; @endphp;
-
-@if($page !== 'home')
     <header class="navbar">
-        <nav class="links">
-            <a href="{{ route('index') }}">{{ __('view.pageName.index') }}</a>
-            <a href="{{ route('cart') }}">{{ __('view.pageName.cart') }}</a>
-            <a href="#">{{ __('view.pageName.products') }}</a>
-            <a href="#">{{ __('view.pageName.orders') }}</a>
-        </nav>
+        @yield('navigation')
 
-        @if(session()->has('admin'))
+        @if (session()->has('admin'))
             <div style="display: flex; padding: 0 25px;">
                 <span>{{ __('view.welcome') }} {{ config('admin.name') }}</span>
 
@@ -109,8 +101,7 @@
             </div>
         @endif
     </header>
-@endif
 
-@yield('content')
+    @yield('content')
 </body>
 </html>
