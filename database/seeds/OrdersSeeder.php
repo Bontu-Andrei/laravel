@@ -11,8 +11,10 @@ class OrdersSeeder extends Seeder
      */
     public function run()
     {
-        factory(App\Order::class, 10)->create()->each(function ($order) {
-            $order->products()->saveMany(\App\Product::all()->random(3));
+        $products = \App\Product::all();
+
+        factory(App\Order::class, 10)->create()->each(function ($order) use($products) {
+            $order->products()->saveMany($products->random(3));
         });
     }
 }
