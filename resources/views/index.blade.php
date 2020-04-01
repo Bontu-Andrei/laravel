@@ -12,15 +12,15 @@
 
         <div style="margin-right: 5px;">
             <div>
-                <b>{{ __('view.label.title') }}</b> {{ __($product->title) }}
+                <b>{{ __('view.label.title') }}</b> {{ $product->title }}
             </div>
 
             <div>
-                <b>{{ __('view.label.description') }}</b> {{ __($product->description) }}
+                <b>{{ __('view.label.description') }}</b> {{ $product->description }}
             </div>
 
             <div>
-                <b>{{ __('view.label.price') }}</b> {{ __($product->price) }}
+                <b>{{ __('view.label.price') }}</b> {{ $product->price }}
             </div>
         </div>
 
@@ -28,8 +28,6 @@
             @csrf
             <button type="submit">{{ __('view.add') }}</button>
         </form>
-
-        <a href="#" style="margin: 5px;">{{ __('view.review') }}</a>
     </div>
 @endforeach
 

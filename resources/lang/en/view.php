@@ -44,6 +44,8 @@ return [
     'back' => 'Back to site',
     'thank' =>'Thank you',
 
-
+    'databases' => [
+        'products' => []
+    ]
 
 ];
