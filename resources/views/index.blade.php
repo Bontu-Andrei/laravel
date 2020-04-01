@@ -5,7 +5,6 @@
 @endsection
 
 @section('content')
-
     <h1 class="flex-center">{{ __('view.pageName.index') }}</h1>
 
     @foreach ($products as $product)
@@ -34,5 +33,4 @@
             </form>
         </div>
     @endforeach
-
 @endsection
