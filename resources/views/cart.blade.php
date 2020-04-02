@@ -7,7 +7,7 @@
 @section('content')
     <h1 class="flex-center">{{ __('view.pageName.cart') }}</h1>
 
-    @if (!empty(session('cart')))
+    @if ( ! empty(session('cart')))
         <div class="container">
             @foreach ($products as $product)
                 <div class="product">
@@ -81,8 +81,8 @@
 
                 <div style="display: flex; justify-content: flex-end; width: 70%; margin: 0 auto;">
                     <a href="{{ route('index') }}">{{ __('view.pageName.index') }}</a>
-                    <button type="submit" name="checkout"
-                            style="margin-left: 10px;">{{ __('view.checkout') }}</button>
+
+                    <button type="submit" name="checkout" style="margin-left: 10px;">{{ __('view.checkout') }}</button>
                 </div>
             </form>
         </div>
