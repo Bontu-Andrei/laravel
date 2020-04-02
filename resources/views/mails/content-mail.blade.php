@@ -13,7 +13,7 @@
 @endforeach
 @endcomponent
 
-@component('mail::button', ['url' => 'http://localhost:8000/index'])
+@component('mail::button', ['url' => route('index')])
 {{ __('view.back') }}
 @endcomponent
 

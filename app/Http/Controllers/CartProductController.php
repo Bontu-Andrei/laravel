@@ -10,7 +10,7 @@ class CartProductController extends Controller
     {
         $product = Product::findOrFail($productId);
 
-        $cart = session()->get('cart');
+        $cart = session()->get('cart', []);
 
         $cart[] = $product->id;
 
@@ -22,14 +22,16 @@ class CartProductController extends Controller
     public function destroy($productId)
     {
         // Remove product from cart session
-        $cart = session()->get('cart');
+        $cart = session()->get('cart', []);
 
         $index = array_search((int) $productId, $cart);
 
-        unset($cart[$index]);
+        if ($index >= 0) {
+            unset($cart[$index]);
 
-        session()->put('cart', $cart);
+            session()->put('cart', $cart);
+        }
 
-        return redirect('/cart');
+        return redirect()->back();
     }
 }
