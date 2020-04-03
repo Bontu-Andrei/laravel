@@ -20,12 +20,15 @@ return [
         'price' => 'Price'
     ],
 
-    'add' => 'Add to cart',
+    'add' => 'Add',
     'delete' => 'Delete',
     'checkout' => 'Checkout',
     'review' => 'Reviews',
     'login' => 'Login',
     'logout' => 'Logout',
+    'edit' => 'Edit',
+    'review' => 'Reviews',
+    'save' => 'Save',
 
     'empty' => 'No products in cart yet.',
     'welcome' => 'Welcome, ',

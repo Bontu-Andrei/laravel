@@ -29,4 +29,10 @@ Route::get('/login', 'LoginController@index')->name('login');
 Route::post('/login', 'LoginController@store')->name('login.store');
 Route::delete('/logout', 'LoginController@destroy')->name('logout');
 
+Route::middleware(['admin'])->group(function () {
+    Route::get('/products', 'ProductController@index')->name('products');
+    Route::get('/products/create', 'ProductController@create')->name('product.create');
+    Route::post('/products/create', 'ProductController@store')->name('product.store');
+});
+
 

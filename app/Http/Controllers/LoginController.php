@@ -29,7 +29,7 @@ class LoginController extends Controller
 
         session()->put('admin', 1);
 
-        return redirect()->route('index');
+        return redirect()->route('products');
     }
 
     public function destroy()
