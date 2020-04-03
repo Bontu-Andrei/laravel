@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Auth::routes();
 
 Route::get('/', function () {
     return view('welcome');
@@ -25,14 +26,13 @@ Route::delete('/cart/{productId}', 'CartProductController@destroy')->name('cart.
 
 Route::post('/checkout', 'CheckoutController@store')->name('checkout');
 
-Route::get('/login', 'LoginController@index')->name('login');
-Route::post('/login', 'LoginController@store')->name('login.store');
-Route::delete('/logout', 'LoginController@destroy')->name('logout');
-
 Route::middleware(['admin'])->group(function () {
     Route::get('/products', 'ProductController@index')->name('products');
-    Route::get('/products/create', 'ProductController@create')->name('product.create');
-    Route::post('/products/create', 'ProductController@store')->name('product.store');
+
+    Route::get('/product/create', 'ProductController@create')->name('product.create');
+    Route::post('/product/create', 'ProductController@store')->name('product.store');
+    Route::get('/products/edit/{product}', 'ProductController@edit')->name('product.edit');
+    Route::put('/products/update/{product}', 'ProductController@update')->name('product.update');
 });
 
 

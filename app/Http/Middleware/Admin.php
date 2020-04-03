@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Illuminate\Support\Facades\Auth;
 
 class Admin
 {
@@ -15,10 +16,10 @@ class Admin
      */
     public function handle($request, Closure $next)
     {
-        if (session()->has('admin')) {
+        if (Auth::check() && Auth::user()->email == config('admin.email')) {
             return $next($request);
         }
 
-        return redirect()->route('login');
+        return redirect()->back();
     }
 }

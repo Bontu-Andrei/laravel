@@ -1,4 +1,4 @@
-@extends('layout')
+@extends('layouts.app')
 
 @section('navigation')
     @include('partials.navigation')

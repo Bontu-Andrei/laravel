@@ -1,7 +1,20 @@
-<nav class="links">
-    <a href="{{ route('index') }}">{{ __('view.pageName.index') }}</a>
-    <a href="{{ route('cart') }}">{{ __('view.pageName.cart') }}</a>
-    <a href="{{ route('products') }}">{{ __('view.pageName.products') }}</a>
-    <a href="#">{{ __('view.pageName.orders') }}</a>
-</nav>
+<li class="nav-item">
+    <a class="nav-link" href="{{ route('index') }}">{{ __('view.pageName.index') }}</a>
+</li>
+
+<li class="nav-item">
+    <a class="nav-link" href="{{ route('cart') }}">{{ __('view.pageName.cart') }}</a>
+
+</li>
+
+<li class="nav-item">
+    <a class="nav-link" href="{{ route('products') }}">{{ __('view.pageName.products') }}</a>
+
+</li>
+
+<li class="nav-item">
+    <a class="nav-link" href="#">{{ __('view.pageName.orders') }}</a>
+</li>
+
+
 

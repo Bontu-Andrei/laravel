@@ -27,8 +27,9 @@ return [
     'login' => 'Login',
     'logout' => 'Logout',
     'edit' => 'Edit',
-    'review' => 'Reviews',
     'save' => 'Save',
+    'home' => 'Home',
+    'register' => 'Register',
 
     'empty' => 'No products in cart yet.',
     'welcome' => 'Welcome, ',
