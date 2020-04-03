@@ -16,7 +16,7 @@ class Admin
      */
     public function handle($request, Closure $next)
     {
-        if (Auth::check() && Auth::user()->email == config('admin.email')) {
+        if (Auth::check() && Auth::user()->email == config('admin.email') && Auth::user()->is_admin == 1) {
             return $next($request);
         }
 
