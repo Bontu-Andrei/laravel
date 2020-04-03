@@ -19,6 +19,6 @@ class Admin
             return $next($request);
         }
 
-        return redirect()->back();
+        return redirect()->route('login');
     }
 }

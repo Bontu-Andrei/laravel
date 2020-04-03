@@ -55,6 +55,7 @@
         <div>
             <form action="{{ route('logout') }}" method="post">
                 @csrf
+                @method('delete')
                 <button type="submit">{{ __('view.logout') }}</button>
             </form>
         </div>
