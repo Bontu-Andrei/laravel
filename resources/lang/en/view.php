@@ -41,6 +41,10 @@ return [
         'password' => 'Password'
     ],
 
+    'orderDate' => 'Order Date',
+    'totalPrice' => 'Total Price',
+    'orderDetails' => 'Order Details',
+
     // Mail section
     'thanks' => 'Thanks for your order',
     'details' => 'Your contact details',

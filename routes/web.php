@@ -34,6 +34,9 @@ Route::middleware(['admin'])->group(function () {
     Route::get('/products/edit/{product}', 'ProductController@edit')->name('product.edit');
     Route::put('/products/update/{product}', 'ProductController@update')->name('product.update');
     Route::delete('/products/{productId}', 'ProductController@destroy')->name('product.destroy');
+
+    Route::get('/orders', 'OrderController@index')->name('orders');
+    Route::get('/order/{orderId}', 'OrderController@show')->name('order');
 });
 
 

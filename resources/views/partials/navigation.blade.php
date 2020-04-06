@@ -13,7 +13,7 @@
 </li>
 
 <li class="nav-item">
-    <a class="nav-link" href="#">{{ __('view.pageName.orders') }}</a>
+    <a class="nav-link" href="{{ route('orders') }}">{{ __('view.pageName.orders') }}</a>
 </li>
 
 

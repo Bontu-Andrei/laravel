@@ -80,7 +80,7 @@
                 <a href="{{ route('index') }}">{{ __('view.pageName.index') }}</a>
                 <a href="{{ route('cart') }}">{{ __('view.pageName.cart') }}</a>
                 <a href="{{ route('products') }}">{{ __('view.pageName.products') }}</a>
-                <a href="#">{{ __('view.pageName.orders') }}</a>
+                <a href="{{ route('orders') }}">{{ __('view.pageName.orders') }}</a>
             </div>
         </div>
     </div>
