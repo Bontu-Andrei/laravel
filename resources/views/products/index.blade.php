@@ -36,7 +36,7 @@
                         </div>
 
                         <div class="m-2">
-                            <form action="#" method="post">
+                            <form action="{{ route('product.destroy', ['productId' => $product->id]) }}" method="post">
                                 @csrf
                                 @method('delete')
                                 <button class="btn btn-danger btn-sm" type="submit">{{ __('view.delete') }}</button>

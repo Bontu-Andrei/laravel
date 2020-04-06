@@ -33,6 +33,7 @@ Route::middleware(['admin'])->group(function () {
     Route::post('/product/create', 'ProductController@store')->name('product.store');
     Route::get('/products/edit/{product}', 'ProductController@edit')->name('product.edit');
     Route::put('/products/update/{product}', 'ProductController@update')->name('product.update');
+    Route::delete('/products/{productId}', 'ProductController@destroy')->name('product.destroy');
 });
 
 

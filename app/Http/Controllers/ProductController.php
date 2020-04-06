@@ -69,9 +69,11 @@ class ProductController extends Controller
 
         if ($request->hasFile('image_path')) {
             //Delete old image
-            Storage::disk('public')->delete($product->image_path);
+            Storage::disk('public')->delete('images/'.$product->image_path);
 
-            $imagePath = $request->file('image_path')->store('images', 'public');
+            $storagePath = $request->file('image_path')->store('images', 'public');
+
+            $imagePath = str_replace('images/', '', $storagePath);
         } else {
             $imagePath = $product->image_path;
         }
@@ -84,5 +86,12 @@ class ProductController extends Controller
         ]);
 
         return redirect()->route('products');
+    }
+
+    public function destroy($productId)
+    {
+        Product::findOrFail($productId)->delete();
+
+        return redirect()->back();
     }
 }
