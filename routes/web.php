@@ -26,6 +26,9 @@ Route::delete('/cart/{productId}', 'CartProductController@destroy')->name('cart.
 
 Route::post('/checkout', 'CheckoutController@store')->name('checkout');
 
+Route::get('/reviews/{productId}', 'ReviewController@index')->name('reviews');
+Route::post('/reviews/{productId}', 'ReviewController@store')->name('reviews.create');
+
 Route::middleware(['admin'])->group(function () {
     Route::get('/products', 'ProductController@index')->name('products');
 
@@ -37,6 +40,8 @@ Route::middleware(['admin'])->group(function () {
 
     Route::get('/orders', 'OrderController@index')->name('orders');
     Route::get('/order/{orderId}', 'OrderController@show')->name('order');
+
+    Route::delete('/review/{review}', 'ReviewController@destroy')->name('review.destroy');
 });
 
 

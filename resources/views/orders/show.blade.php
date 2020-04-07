@@ -7,7 +7,7 @@
 @section('content')
     <h1 class="text-center">{{ __('view.orderDetails') }}</h1>
 
-    <table class="table-bordered" style="width: 80%; margin: 0 auto;">
+    <table class="table-bordered" style="width: 80%; margin: 20px auto;">
         <tr>
             <th>{{ __('view.placeholder.name') }}</th>
             <td colspan="4">{{ $order->customer_name }}</td>

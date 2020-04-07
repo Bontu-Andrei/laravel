@@ -44,7 +44,8 @@
                         </div>
 
                         <div class="m-2">
-                            <a class="btn btn-light btn-sm" href="#">{{ __('view.review') }}</a>
+                            <a class="btn btn-light btn-sm"
+                               href="{{ route('reviews', ['productId' => $product->id]) }}">{{ __('view.review') }}</a>
                         </div>
                     </div>
                 </div>

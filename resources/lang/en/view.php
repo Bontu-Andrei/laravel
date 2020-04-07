@@ -30,6 +30,9 @@ return [
     'save' => 'Save',
     'home' => 'Home',
     'register' => 'Register',
+    'rating' => 'Rating',
+    'addReview' => 'Add Review',
+    'deleteReview' => 'Delete Review',
 
     'empty' => 'No products in cart yet.',
     'welcome' => 'Welcome, ',

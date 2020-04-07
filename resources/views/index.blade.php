@@ -29,10 +29,15 @@
                         </div>
                     </div>
 
-                    <form class="m-2" action="{{ route('cart.store', ['productId' => $product->id]) }}" method="post">
-                        @csrf
-                        <button class="btn btn-primary btn-sm" type="submit">{{ __('view.add') }}</button>
-                    </form>
+                    <div class="d-flex">
+                        <form action="{{ route('cart.store', ['productId' => $product->id]) }}" method="post">
+                            @csrf
+                            <button class="btn btn-primary btn-sm" type="submit">{{ __('view.add') }}</button>
+                        </form>
+
+                        <a class="btn btn-light btn-sm ml-2"
+                           href="{{ route('reviews', ['productId' => $product->id]) }}">{{ __('view.review') }}</a>
+                    </div>
                 </div>
             </div>
         @endforeach
