@@ -32,11 +32,11 @@
                     <div class="m-2 d-flex">
                         <div class="m-2">
                             <a class="btn btn-light btn-sm"
-                               href="{{ route('product.edit', ['product' => $product->id]) }}">{{ __('view.edit') }}</a>
+                               href="{{ route('products.edit', ['product' => $product->id]) }}">{{ __('view.edit') }}</a>
                         </div>
 
                         <div class="m-2">
-                            <form action="{{ route('product.destroy', ['productId' => $product->id]) }}" method="post">
+                            <form action="{{ route('products.destroy', ['productId' => $product->id]) }}" method="post">
                                 @csrf
                                 @method('delete')
                                 <button class="btn btn-danger btn-sm" type="submit">{{ __('view.delete') }}</button>
@@ -54,7 +54,7 @@
 
         <div style="display: flex; justify-content: space-evenly; align-items: center; margin-bottom: 50px;">
             <div>
-                <a class="btn btn-primary" href="{{ route('product.create') }}">{{ __('view.add') }}</a>
+                <a class="btn btn-primary" href="{{ route('products.create') }}">{{ __('view.add') }}</a>
             </div>
 
             <div>

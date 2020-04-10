@@ -8,7 +8,7 @@
     <h1 class="text-center">{{ __('view.edit') }}</h1>
 
     <div class="d-flex justify-content-center m-5">
-        <form action="{{ route('product.update', ['product' => $product->id]) }}" method="post" enctype="multipart/form-data">
+        <form action="{{ route('products.update', ['product' => $product->id]) }}" method="post" enctype="multipart/form-data">
             @csrf
             @method('put')
 

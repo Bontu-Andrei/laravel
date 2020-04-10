@@ -8,7 +8,7 @@
     <h1 class="text-center">{{ __('view.add') }}</h1>
 
     <div class="d-flex justify-content-center m-5">
-        <form action="{{ route('product.store') }}" method="post" enctype="multipart/form-data">
+        <form action="{{ route('products.store') }}" method="post" enctype="multipart/form-data">
             @csrf
 
             @include('partials.product-form')

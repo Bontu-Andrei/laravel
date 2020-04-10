@@ -30,13 +30,12 @@ Route::get('/reviews/{productId}', 'ReviewController@index')->name('reviews');
 Route::post('/reviews/{productId}', 'ReviewController@store')->name('reviews.create');
 
 Route::middleware(['admin'])->group(function () {
-    Route::get('/products', 'ProductController@index')->name('products');
-
-    Route::get('/product/create', 'ProductController@create')->name('product.create');
-    Route::post('/product/create', 'ProductController@store')->name('product.store');
-    Route::get('/products/edit/{product}', 'ProductController@edit')->name('product.edit');
-    Route::put('/products/update/{product}', 'ProductController@update')->name('product.update');
-    Route::delete('/products/{productId}', 'ProductController@destroy')->name('product.destroy');
+    Route::get('/products', 'ProductsController@index')->name('products');
+    Route::get('/products/create', 'ProductsController@create')->name('products.create');
+    Route::post('/products/create', 'ProductsController@store')->name('products.store');
+    Route::get('/products/edit/{product}', 'ProductsController@edit')->name('products.edit');
+    Route::put('/products/update/{product}', 'ProductsController@update')->name('products.update');
+    Route::delete('/products/{productId}', 'ProductsController@destroy')->name('products.destroy');
 
     Route::get('/orders', 'OrderController@index')->name('orders');
     Route::get('/order/{orderId}', 'OrderController@show')->name('order');

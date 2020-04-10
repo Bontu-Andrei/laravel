@@ -23,13 +23,13 @@ class Product extends Model
 
     public function getImageUrlAttribute()
     {
-        return url('/storage/images').'/'.($this->image_path ?: 'default.jpg');
+        return url('/storage').'/'.($this->image_path ?: 'default.jpg');
     }
 
     public function getEncodedImageAttribute()
     {
         if (Storage::exists('images/')) {
-            $file = Storage::get("images/{$this->image_path}");
+            $file = Storage::get($this->image_path);
 
             if ( ! $file) {
                 return '';
