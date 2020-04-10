@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Storage;
 
 class ProductsController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
         return view('products.index', ['products' => Product::all()]);
     }
