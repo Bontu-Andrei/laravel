@@ -33,7 +33,7 @@ Route::middleware(['admin'])->group(function () {
     Route::resource('products', 'ProductController')->except('show');
 
     Route::get('/orders', 'OrderController@index')->name('orders');
-    Route::get('/order/{orderId}', 'OrderController@show')->name('order');
+    Route::get('/order/{orderId}', 'OrderController@show')->name('orders.show');
 
     Route::delete('/review/{review}', 'ReviewController@destroy')->name('review.destroy');
 });

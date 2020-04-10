@@ -37,7 +37,7 @@
 
                 <tr>
                     <th>{{ __('view.orderDetails') }}</th>
-                    <td><a href="{{ route('order', ['orderId' => $order->id]) }}">{{ __('view.orderDetails') }}</a></td>
+                    <td><a href="{{ route('orders.show', ['orderId' => $order->id]) }}">{{ __('view.orderDetails') }}</a></td>
                 </tr>
             </table>
         @endforeach
