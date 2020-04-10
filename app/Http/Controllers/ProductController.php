@@ -6,7 +6,7 @@ use App\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
-class ProductsController extends Controller
+class ProductController extends Controller
 {
     public function index()
     {
@@ -34,7 +34,7 @@ class ProductsController extends Controller
             'image_path' => $request->file('image_path')->store('images', 'public'),
         ]);
 
-        return redirect()->route('products');
+        return redirect()->route('products.index');
     }
 
     public function edit(Product $product)
@@ -69,12 +69,12 @@ class ProductsController extends Controller
             'image_path' => $imagePath,
         ]);
 
-        return redirect()->route('products');
+        return redirect()->route('products.index');
     }
 
-    public function destroy($productId)
+    public function destroy($product)
     {
-        Product::findOrFail($productId)->delete();
+        Product::findOrFail($product)->delete();
 
         return redirect()->back();
     }

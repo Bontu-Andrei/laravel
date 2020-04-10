@@ -57,6 +57,6 @@
 </div>
 
 <div style="margin: 15px 0; display: flex; justify-content: space-between;">
-    <a class="btn btn-light btn-sm" href="{{ route('products') }}">{{ __('view.pageName.products') }}</a>
+    <a class="btn btn-light btn-sm" href="{{ route('products.index') }}">{{ __('view.pageName.products') }}</a>
     <button class="btn btn-primary btn-sm" type="submit" style="margin-right: 20px;">{{ __('view.save') }}</button>
 </div>

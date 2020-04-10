@@ -30,12 +30,7 @@ Route::get('/reviews/{productId}', 'ReviewController@index')->name('reviews');
 Route::post('/reviews/{productId}', 'ReviewController@store')->name('reviews.create');
 
 Route::middleware(['admin'])->group(function () {
-    Route::get('/products', 'ProductsController@index')->name('products');
-    Route::get('/products/create', 'ProductsController@create')->name('products.create');
-    Route::post('/products/create', 'ProductsController@store')->name('products.store');
-    Route::get('/products/edit/{product}', 'ProductsController@edit')->name('products.edit');
-    Route::put('/products/update/{product}', 'ProductsController@update')->name('products.update');
-    Route::delete('/products/{productId}', 'ProductsController@destroy')->name('products.destroy');
+    Route::resource('products', 'ProductController')->except('show');
 
     Route::get('/orders', 'OrderController@index')->name('orders');
     Route::get('/order/{orderId}', 'OrderController@show')->name('order');

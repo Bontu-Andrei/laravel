@@ -8,7 +8,7 @@
 </li>
 
 <li class="nav-item">
-    <a class="nav-link" href="{{ route('products') }}">{{ __('view.pageName.products') }}</a>
+    <a class="nav-link" href="{{ route('products.index') }}">{{ __('view.pageName.products') }}</a>
 
 </li>
 
