@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Order;
-use Illuminate\Http\Request;
 
 class OrderController extends Controller
 {
@@ -14,10 +13,10 @@ class OrderController extends Controller
 
     public function show($orderId)
     {
-        $order = Order::where('id', $orderId)->with(['products'])->first();
+        $order = Order::findOrFail($orderId);
 
         return view('orders.show', [
-            'order' => $order
+            'order' => $order,
         ]);
     }
 }

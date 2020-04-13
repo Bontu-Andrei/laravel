@@ -10,7 +10,7 @@ class ReviewController extends Controller
 {
     public function index($productId)
     {
-        $product =  Product::where('id', $productId)->with(['reviews'])->first();
+        $product =  Product::where('id', $productId)->with(['reviews'])->firstOrFail();
 
         return view('reviews.index', [
             'product' => $product,
