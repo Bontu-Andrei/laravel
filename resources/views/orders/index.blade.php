@@ -39,6 +39,12 @@
                     <th>{{ __('view.orderDetails') }}</th>
                     <td><a href="{{ route('orders.show', ['orderId' => $order->id]) }}">{{ __('view.orderDetails') }}</a></td>
                 </tr>
+
+                <tr>
+                    <th>{{ __('view.orderReview') }}</th>
+                    <td><a href="{{ route('reviews', ['reviewableId' => $order->id, 'reviewableType' => 'order']) }}">
+                            {{ __('view.orderReview') }}</a></td>
+                </tr>
             </table>
         @endforeach
     </div>

@@ -1,8 +1,9 @@
 <div class="d-flex justify-content-center">
-    <form action="{{ route('reviews.create', ['productId' => $product->id]) }}" method="post">
+    <form action="{{ route('reviews.create', ['reviewableId' => $item->id, 'reviewableType' => $type]) }}" method="post">
         @csrf
 
-        <input type="hidden" name="product_id" value="{{ $product->id }}">
+        <input type="hidden" name="reviewable_id" value="{{ $item->id }}">
+        <input type="hidden" name="reviewable_type" value="{{ $type }}">
 
         <div>
             <div>

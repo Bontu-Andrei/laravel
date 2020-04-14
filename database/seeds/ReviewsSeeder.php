@@ -14,5 +14,9 @@ class ReviewsSeeder extends Seeder
         \App\Product::all()->each(function ($product) {
             $product->reviews()->saveMany(factory(\App\Review::class, 5)->make());
         });
+
+        \App\Order::all()->each(function ($order) {
+            $order->reviews()->saveMany(factory(\App\Review::class, 5)->make());
+        });
     }
 }

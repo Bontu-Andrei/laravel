@@ -33,6 +33,7 @@ return [
     'rating' => 'Rating',
     'addReview' => 'Add Review',
     'deleteReview' => 'Delete Review',
+    'orderReview' => 'Order Reviews',
 
     'empty' => 'No products in cart yet.',
     'welcome' => 'Welcome, ',
