@@ -9,25 +9,24 @@ use Illuminate\Http\Request;
 
 class ReviewController extends Controller
 {
-    public function index($reviewableId, $reviewableType)
+    public function index()
     {
-        $model = null;
+        request()->validate([
+            'id' => 'required|numeric',
+            'type' => 'required|in:product,order'
+        ]);
 
-        if ($reviewableType == 'product') {
+        if (request()->query('type') == 'product') {
             $model = Product::class;
         } else {
             $model = Order::class;
         }
 
-        if (! $model) {
-            return response('Not valid!', 422);
-        }
-
-        $item = $model::findOrFail($reviewableId);
+        $item = $model::findOrFail(request()->query('id'));
 
         return view('reviews.index', [
             'item' => $item,
-            'type' => $reviewableType
+            'type' => request()->query('type')
         ]);
     }
 
@@ -44,24 +43,24 @@ class ReviewController extends Controller
         if ($request->input('reviewable_type') == 'product') {
             $product = Product::find($request->input('reviewable_id'));
             $order = null;
-            $type = Product::class;
-        } else {
+            $product->reviews()->create([
+                'rating' => $request->input('rating'),
+                'title' => $request->input('title'),
+                'description' => $request->input('description'),
+            ]);
+        } elseif ($request->input('reviewable_type') == 'order') {
             $order = Order::find($request->input('reviewable_id'));
             $product = null;
-            $type = Order::class;
+            $order->reviews()->create([
+                'rating' => $request->input('rating'),
+                'title' => $request->input('title'),
+                'description' => $request->input('description'),
+            ]);
         }
 
         if (!$product && !$order) {
             return response('Not find!', 404);
         }
-
-        Review::create([
-            'rating' => $request->input('rating'),
-            'title' => $request->input('title'),
-            'description' => $request->input('description'),
-            'reviewable_id' => $request->input('reviewable_id'),
-            'reviewable_type' => $type,
-        ]);
 
         return redirect()->back();
     }

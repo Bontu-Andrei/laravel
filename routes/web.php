@@ -26,8 +26,8 @@ Route::delete('/cart/{productId}', 'CartProductController@destroy')->name('cart.
 
 Route::post('/checkout', 'CheckoutController@store')->name('checkout');
 
-Route::get('/reviews/{reviewableId}/{reviewableType}', 'ReviewController@index')->name('reviews');
-Route::post('/reviews/{reviewableId}/{reviewableType}', 'ReviewController@store')->name('reviews.create');
+Route::get('/reviews', 'ReviewController@index')->name('reviews');
+Route::post('/reviews', 'ReviewController@store')->name('reviews.create');
 
 Route::middleware(['admin'])->group(function () {
     Route::resource('products', 'ProductController')->except('show');

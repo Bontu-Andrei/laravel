@@ -45,7 +45,7 @@
 
                         <div class="m-2">
                             <a class="btn btn-light btn-sm"
-                               href="{{ route('reviews', ['reviewableId' => $product->id, 'reviewableType' => 'product']) }}"
+                               href="{{ route('reviews') . '?id=' . $product->id . '&type=product' }}"
                             >{{ __('view.review') }}</a>
                         </div>
                     </div>

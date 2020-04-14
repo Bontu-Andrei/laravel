@@ -42,8 +42,7 @@
 
                 <tr>
                     <th>{{ __('view.orderReview') }}</th>
-                    <td><a href="{{ route('reviews', ['reviewableId' => $order->id, 'reviewableType' => 'order']) }}">
-                            {{ __('view.orderReview') }}</a></td>
+                    <td><a href="{{ route('reviews') . '?id=' . $order->id . '&type=order' }}">{{ __('view.orderReview') }}</a></td>
                 </tr>
             </table>
         @endforeach

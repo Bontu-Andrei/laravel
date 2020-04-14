@@ -36,7 +36,7 @@
                         </form>
 
                         <a class="btn btn-light btn-sm ml-2"
-                           href="{{ route('reviews', ['reviewableId' => $product->id, 'reviewableType' => 'product']) }}"
+                           href="{{ route('reviews') . '?id=' . $product->id . '&type=product' }}"
                             >{{ __('view.review') }}</a>
                     </div>
                 </div>
