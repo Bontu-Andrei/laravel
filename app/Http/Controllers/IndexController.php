@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Product;
+use Illuminate\Http\Request;
 
 class IndexController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $ids = [];
 
@@ -15,6 +16,10 @@ class IndexController extends Controller
         }
 
         $productsNotInCart = Product::whereNotIn('id', $ids)->get();
+
+        if ($request->wantsJson()) {
+            return response()->json($productsNotInCart);
+        }
 
         return view('index', ['products' => $productsNotInCart]);
     }

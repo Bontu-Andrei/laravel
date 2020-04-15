@@ -29,6 +29,10 @@ Route::post('/checkout', 'CheckoutController@store')->name('checkout');
 Route::get('/reviews', 'ReviewController@index')->name('reviews');
 Route::post('/reviews', 'ReviewController@store')->name('reviews.create');
 
+Route::get('/javascript', function () {
+    return view('javascript');
+});
+
 Route::middleware(['admin'])->group(function () {
     Route::resource('products', 'ProductController')->except('show');
 
