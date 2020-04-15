@@ -43,14 +43,10 @@ class ReviewController extends Controller
             'description' => $request->input('description'),
         ]);
 
-        $item = null;
-
         if ($request->input('reviewable_type') == 'product') {
-            $product = Product::find($request->input('reviewable_id'));
-            $item = $product;
+            $item = Product::find($request->input('reviewable_id'));
         } else {
-            $order = Order::find($request->input('reviewable_id'));
-            $item = $order;
+            $item = Order::find($request->input('reviewable_id'));
         }
 
         $review->reviewable()->associate($item);
