@@ -9,24 +9,25 @@ use Illuminate\Http\Request;
 
 class ReviewController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        request()->validate([
+        $request->validate([
             'id' => 'required|numeric',
             'type' => 'required|in:product,order'
         ]);
 
-        if (request()->query('type') == 'product') {
+        if ($request->query('type') == 'product') {
             $model = Product::class;
         } else {
             $model = Order::class;
         }
 
-        $item = $model::findOrFail(request()->query('id'));
+        $reviews = $model::findOrFail($request->query('id'))->reviews;
 
         return view('reviews.index', [
-            'item' => $item,
-            'type' => request()->query('type')
+            'reviews' => $reviews,
+            'type' => $request->query('type'),
+            'id' => $request->query('id')
         ]);
     }
 
@@ -40,27 +41,23 @@ class ReviewController extends Controller
             'reviewable_type' => 'required|in:product,order'
         ]);
 
+        $review = new Review();
+        $review->rating = $request->input('rating');
+        $review->title = $request->input('title');
+        $review->description = $request->input('description');
+
+        $item = null;
+
         if ($request->input('reviewable_type') == 'product') {
             $product = Product::find($request->input('reviewable_id'));
-            $order = null;
-            $product->reviews()->create([
-                'rating' => $request->input('rating'),
-                'title' => $request->input('title'),
-                'description' => $request->input('description'),
-            ]);
+            $item = $product;
         } elseif ($request->input('reviewable_type') == 'order') {
             $order = Order::find($request->input('reviewable_id'));
-            $product = null;
-            $order->reviews()->create([
-                'rating' => $request->input('rating'),
-                'title' => $request->input('title'),
-                'description' => $request->input('description'),
-            ]);
+            $item = $order;
         }
 
-        if (!$product && !$order) {
-            return response('Not find!', 404);
-        }
+        $review->reviewable()->associate($item);
+        $review->save();
 
         return redirect()->back();
     }
