@@ -16,13 +16,9 @@ class ReviewController extends Controller
             'type' => 'required|in:product,order'
         ]);
 
-        if ($request->query('type') == 'product') {
-            $model = Product::class;
-        } else {
-            $model = Order::class;
-        }
+        $type = $request->query('type') === 'product' ? Product::class : Order::class;
 
-        $reviews = $model::findOrFail($request->query('id'))->reviews;
+        $reviews = Review::where('reviewable_id', $request->query('id'))->where('reviewable_type', $type)->get();
 
         return view('reviews.index', [
             'reviews' => $reviews,
@@ -41,17 +37,18 @@ class ReviewController extends Controller
             'reviewable_type' => 'required|in:product,order'
         ]);
 
-        $review = new Review();
-        $review->rating = $request->input('rating');
-        $review->title = $request->input('title');
-        $review->description = $request->input('description');
+        $review = new Review([
+            'rating' => $request->input('rating'),
+            'title' => $request->input('title'),
+            'description' => $request->input('description'),
+        ]);
 
         $item = null;
 
         if ($request->input('reviewable_type') == 'product') {
             $product = Product::find($request->input('reviewable_id'));
             $item = $product;
-        } elseif ($request->input('reviewable_type') == 'order') {
+        } else {
             $order = Order::find($request->input('reviewable_id'));
             $item = $order;
         }
