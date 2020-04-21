@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 class CartController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $ids = [];
 
@@ -16,6 +16,10 @@ class CartController extends Controller
         }
 
         $productsInCart = Product::whereIn('id', $ids)->get();
+
+        if ($request->wantsJson()) {
+            return response()->json($productsInCart);
+        }
 
         return view('cart', ['products' => $productsInCart]);
     }

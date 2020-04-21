@@ -18,49 +18,28 @@
             function renderList(products) {
                 html = [
                     '<tr>',
-                    '<th>Nr. Crt.</th>',
                     '<th>Title</th>',
                     '<th>Description</th>',
                     '<th>Price</th>',
+                    '<th>Product Image</th>',
+                    '<th>Add to cart</th>',
                     '</tr>'
                 ].join('');
-                var index = 0;
+
                 $.each(products, function (key, product) {
-                    index = index + 1;
                     html += [
                         '<tr>',
-                        '<td>' + index + '</td>',
                         '<td>' + product.title + '</td>',
                         '<td>' + product.description + '</td>',
                         '<td>' + product.price + '</td>',
+                        '<td><img src="' + product.image_url + '" alt="product_image" width="100px;" height="100px;"></td>',
+                        '<td><button id="add">Add</button></td>',
                         '</tr>'
                     ].join('');
                 });
                 return html;
             }
-            function renderOrdersList(orders) {
-                html = [
-                    '<tr>',
-                    '<th>Customer Name</th>',
-                    '<th>Customer Details</th>',
-                    '<th>Customer Comments</th>',
-                    '<th>Product Price Sum</th>',
-                    '<th>Order Details</th>',
-                    '</tr>'
-                ].join('');
-                $.each(orders, function (key, order) {
-                    html += [
-                        '<tr>',
-                        '<td>' + order.customer_name + '</td>',
-                        '<td>' + order.customer_details + '</td>',
-                        '<td>' + order.customer_comments + '</td>',
-                        '<td>' + order.product_price_sum + '</td>',
-                        '<td> <a href="#order/' + order.id + '"></a></td>',
-                        '</tr>'
-                    ].join('');
-                });
-                return html;
-            }
+
             /**
              * URL hash change handler
              */
@@ -77,18 +56,6 @@
                             success: function (response) {
                                 // Render the products in the cart list
                                 $('.cart .list').html(renderList(response));
-                            }
-                        });
-                        break;
-                    case '#orders':
-                        // Show the orders page
-                        $('.orders').show();
-                        // Load the orders from the server
-                        $.ajax('/orders', {
-                            dataType: 'json',
-                            success: function (response) {
-                                // Render the orders
-                                $('.orders .list').html(renderOrdersList(response));
                             }
                         });
                         break;
@@ -112,33 +79,26 @@
     </script>
 </head>
 <body>
-<!-- The index page -->
-<div class="page index" style="width: 80%; margin: 0 auto;">
-    <div class="nav" style="margin: 20px; text-align: right">
-        <a href="#cart" class="button">Go to cart</a>
-        <a href="#orders" class="button">Go to orders</a>
+    <!-- The index page -->
+    <div class="page index" style="width: 80%; margin: 0 auto;">
+        <div class="nav" style="margin: 20px; text-align: right">
+            <a href="#cart" class="button">Go to cart</a>
+        </div>
+
+        <h1 style="text-align: center; margin-bottom: 30px;">Index Page</h1>
+        <!-- The index element where the products list is rendered -->
+        <table class="list"></table>
     </div>
 
-    <h1 style="text-align: center; margin-bottom: 30px;">Index Page</h1>
-    <!-- The index element where the products list is rendered -->
-    <table class="list"></table>
-</div>
+    <!-- The cart page -->
+    <div class="page cart">
+        <div class="nav" style="margin: 20px; text-align: right">
+            <a href="#" class="button">Go to index</a>
+        </div>
 
-<!-- The cart page -->
-<div class="page cart">
-    <!-- The cart element where the products list is rendered -->
-    <table class="list"></table>
-
-    <!-- A link to go to the index by changing the hash -->
-    <a href="#" class="button">Go to index</a>
-</div>
-
-<!-- The orders page -->
-<div class="page orders">
-    <table class="list"></table>
-
-    <!-- A link to go to the index by changing the hash -->
-    <a href="#" class="button">Go to index</a>
-</div>
+        <h1 style="text-align: center; margin-bottom: 30px;">Cart Page</h1>
+        <!-- The cart element where the products list is rendered -->
+        <table class="list"></table>
+    </div>
 </body>
 </html>
