@@ -8,8 +8,12 @@ use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        if ($request->wantsJson() || $request->expectsJson()) {
+            return response()->json([Product::all()], 200);
+        }
+
         return view('products.index', ['products' => Product::all()]);
     }
 

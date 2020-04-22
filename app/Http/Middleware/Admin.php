@@ -20,6 +20,12 @@ class Admin
             return $next($request);
         }
 
+        if ($request->wantsJson() || $request->expectsJson()) {
+            return response()->json([
+                'message' => 'Admin required',
+            ], 422);
+        }
+
         return redirect()->back();
     }
 }
