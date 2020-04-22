@@ -49,6 +49,7 @@
 
             $('#checkout').on('submit', function (e) {
                 e.preventDefault();
+
                 $.ajax('/checkout', {
                     type: 'post',
                     data:{
@@ -62,6 +63,27 @@
                     }
                 })
             })
+
+            $('#login').on('submit', function (e) {
+                e.preventDefault();
+
+                $.ajax('/login', {
+                    type: 'post',
+                    dataType: 'json',
+                    data:{
+                        email: $('#email').val(),
+                        password: $('#password').val(),
+                    },
+                    success: function () {
+
+                    },
+                    error: function (xhr) {
+                        var error = JSON.parse(xhr.responseText);
+                        // alert(error.errors[1]);
+                        console.log(error.errors);
+                    }
+                })
+            });
 
             function renderList(products, page) {
                 html = [
@@ -113,6 +135,17 @@
                             }
                         });
                         break;
+                    case '#login':
+                        // Show the cart page
+                        $('.login').show();
+                        // Load the cart products from the server
+                        $.ajax('/login', {
+                            dataType: 'json',
+                            success: function () {
+                                console.log('asda');
+                            }
+                        });
+                        break;
                     default:
                         // If all else fails, always default to index
                         // Show the index page
@@ -135,8 +168,14 @@
 <body>
     <!-- The index page -->
     <div class="page index container">
-        <nav class="navbar navbar-light bg-light">
-            <a class="navbar-brand" href="#cart">{{ __('view.pageName.cart') }}</a>
+        <nav class="navbar navbar-expand-lg">
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#cart">{{ __('view.pageName.cart') }}</a>
+                    </li>
+                </ul>
+            </div>
         </nav>
 
         <h1 class="m-3 d-flex justify-content-center">{{ __('view.pageName.index') }}</h1>
@@ -146,8 +185,14 @@
 
     <!-- The cart page -->
     <div class="page cart container">
-        <nav class="navbar navbar-light bg-light">
-            <a class="navbar-brand" href="#">{{ __('view.pageName.index') }}</a>
+        <nav class="navbar navbar-expand-lg">
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">{{ __('view.pageName.index') }}</a>
+                    </li>
+                </ul>
+            </div>
         </nav>
 
         <h1 class="m-3 d-flex justify-content-center">{{ __('view.pageName.cart') }}</h1>
@@ -180,6 +225,40 @@
                 </form>
             </div>
         </div>
+    </div>
+
+    <!-- The login page -->
+    <div class="page login container">
+        <nav class="navbar navbar-expand-lg">
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">{{ __('view.pageName.index') }}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#cart">{{ __('view.pageName.cart') }}</a>
+                    </li>
+                    <li class="nav-item">
+                        <button id="log">log</button>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <h1 class="m-3 d-flex justify-content-center">{{ __('view.login') }}</h1>
+
+        <form id="login">
+            <div class="form-group">
+                <label for="email">{{ __('view.email') }}</label>
+                <input type="email" name="email" class="form-control" id="email">
+            </div>
+            <div class="form-group">
+                <label for="password">{{ __('view.password') }}</label>
+                <input type="password" name="password" class="form-control" id="password">
+            </div>
+
+            <button type="submit" class="btn btn-primary">{{ __('view.login') }}</button>
+        </form>
     </div>
 </body>
 </html>

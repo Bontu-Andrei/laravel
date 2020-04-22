@@ -58,5 +58,7 @@ return [
 
 
     //Javascript section
-
+    'user' => 'Username',
+    'password' => 'Password',
+    'email' => 'E-mail Address'
 ];
