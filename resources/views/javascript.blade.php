@@ -1,39 +1,93 @@
 <html>
 <head>
-    <style>
-        table {
-            border-collapse: collapse;
-        }
-        table, th, td {
-            border: 1px solid black;
-        }
-    </style>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
 
     <!-- Load the jQuery JS library -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
     <!-- Custom JS script -->
     <script type="text/javascript">
+        function __(name) {
+            return name;
+        }
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
         $(document).ready(function () {
-            function renderList(products) {
+            $(document).on('click','.add-to-cart',function(e) {
+                e.preventDefault();
+               var id = $(e.target).data('id');
+
+               $.ajax('/cart/' + id, {
+                   type: 'post',
+                   dataType: 'json',
+                   success: function () {
+                       $(e.target).parent().parent().remove();
+                   }
+               })
+            });
+
+            $(document).on('click', '.delete-from-cart', function(e) {
+                e.preventDefault();
+                var id = $(e.target).data('id');
+
+                $.ajax('/cart/' + id, {
+                    type: 'delete',
+                    dataType: 'json',
+                    contentType:'application/json',
+                    success: function () {
+                        $(e.target).parent().parent().remove();
+                    }
+                })
+            });
+
+            $('#checkout').on('submit', function (e) {
+                e.preventDefault();
+                $.ajax('/checkout', {
+                    type: 'post',
+                    data:{
+                        customer_name: $('.name').val(),
+                        contact_details: $('.contact-details').val(),
+                        customer_comments: $('.comments').val(),
+                    },
+                    dataType: 'json',
+                    success: function () {
+                        alert('Checkout success!');
+                    }
+                })
+            })
+
+            function renderList(products, page) {
                 html = [
                     '<tr>',
-                    '<th>Title</th>',
-                    '<th>Description</th>',
-                    '<th>Price</th>',
-                    '<th>Product Image</th>',
-                    '<th>Add to cart</th>',
+                    '<th>' + __('Title') + '</th>',
+                    '<th>' + __('Description') + '</th>',
+                    '<th>' + __('Price') + '</th>',
+                    '<th>' + __('Product Image') + '</th>',
+                    page == 'index' ? '<th>' + __('Add to cart') + '</th>' : '<th>' + __('Delete') + '</th>',
                     '</tr>'
                 ].join('');
 
                 $.each(products, function (key, product) {
                     html += [
                         '<tr>',
-                        '<td>' + product.title + '</td>',
-                        '<td>' + product.description + '</td>',
-                        '<td>' + product.price + '</td>',
-                        '<td><img src="' + product.image_url + '" alt="product_image" width="100px;" height="100px;"></td>',
-                        '<td><button id="add">Add</button></td>',
+                        '<td>' + __(product.title) + '</td>',
+                        '<td>' + __(product.description) + '</td>',
+                        '<td>' + __(product.price) + '</td>',
+                        '<td><img src="' + __(product.image_url) + '" alt="' + __('product_image') + '" width="100px;" height="100px;"></td>',
+                        page == 'index' ?
+                            '<td>' +
+                                '<button class="btn btn-secondary add-to-cart" data-id="' + product.id + '">' + __('Add') + '</button>' +
+                            '</td>' :
+                            '<td>' +
+                                '<button class="btn btn-secondary delete-from-cart" data-id="' + product.id + '">' + __('Delete') + '</button>' +
+                            '</td>',
                         '</tr>'
                     ].join('');
                 });
@@ -55,7 +109,7 @@
                             dataType: 'json',
                             success: function (response) {
                                 // Render the products in the cart list
-                                $('.cart .list').html(renderList(response));
+                                $('.cart .list').html(renderList(response, 'cart'));
                             }
                         });
                         break;
@@ -68,7 +122,7 @@
                             dataType: 'json',
                             success: function (response) {
                                 // Render the products in the index list
-                                $('.index .list').html(renderList(response));
+                                $('.index .list').html(renderList(response, 'index'));
                             }
                         });
                         break;
@@ -80,25 +134,52 @@
 </head>
 <body>
     <!-- The index page -->
-    <div class="page index" style="width: 80%; margin: 0 auto;">
-        <div class="nav" style="margin: 20px; text-align: right">
-            <a href="#cart" class="button">Go to cart</a>
-        </div>
+    <div class="page index container">
+        <nav class="navbar navbar-light bg-light">
+            <a class="navbar-brand" href="#cart">{{ __('view.pageName.cart') }}</a>
+        </nav>
 
-        <h1 style="text-align: center; margin-bottom: 30px;">Index Page</h1>
-        <!-- The index element where the products list is rendered -->
+        <h1 class="m-3 d-flex justify-content-center">{{ __('view.pageName.index') }}</h1>
+
         <table class="list"></table>
     </div>
 
     <!-- The cart page -->
-    <div class="page cart">
-        <div class="nav" style="margin: 20px; text-align: right">
-            <a href="#" class="button">Go to index</a>
-        </div>
+    <div class="page cart container">
+        <nav class="navbar navbar-light bg-light">
+            <a class="navbar-brand" href="#">{{ __('view.pageName.index') }}</a>
+        </nav>
 
-        <h1 style="text-align: center; margin-bottom: 30px;">Cart Page</h1>
-        <!-- The cart element where the products list is rendered -->
-        <table class="list"></table>
+        <h1 class="m-3 d-flex justify-content-center">{{ __('view.pageName.cart') }}</h1>
+
+        <div class="card">
+            <div class="card-body">
+                <table class="list"></table>
+            </div>
+
+            <div class="card-footer">
+                <form id="checkout">
+                    <div class="form-group">
+                        <input type="text" name="customer_name"
+                               placeholder="{{ __('view.placeholder.name') }}"
+                               class="name form-control form-control-sm m-2">
+
+                        <input type="text" name="contact_details"
+                               placeholder="{{ __('view.placeholder.contact') }}"
+                               class="contact-details form-control m-2">
+
+                        <input type="text" name="customer_comments"
+                               placeholder="{{ __('view.placeholder.comments') }}"
+                               class="comments form-control form-control-lg m-2">
+                    </div>
+
+                    <div class="d-flex justify-content-end">
+                        <a href="#" class="btn btn-sm">{{ __('view.pageName.index') }}</a>
+                        <button class="btn btn-secondary btn-sm">{{ __('view.checkout') }}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 </body>
 </html>

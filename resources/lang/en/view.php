@@ -55,4 +55,8 @@ return [
     'comments' => 'Comments',
     'back' => 'Back to site',
     'thank' =>'Thank you',
+
+
+    //Javascript section
+
 ];

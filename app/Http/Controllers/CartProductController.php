@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Product;
+use Illuminate\Http\Request;
 
 class CartProductController extends Controller
 {
@@ -19,7 +20,7 @@ class CartProductController extends Controller
         return redirect()->route('index');
     }
 
-    public function destroy($productId)
+    public function destroy($productId, Request $request)
     {
         // Remove product from cart session
         $cart = session()->get('cart', []);
@@ -30,6 +31,10 @@ class CartProductController extends Controller
             unset($cart[$index]);
 
             session()->put('cart', $cart);
+        }
+
+        if ($request->wantsJson()) {
+            return response()->json([]);
         }
 
         return redirect()->back();
