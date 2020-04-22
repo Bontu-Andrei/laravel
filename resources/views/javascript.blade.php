@@ -141,7 +141,7 @@
 
         <h1 class="m-3 d-flex justify-content-center">{{ __('view.pageName.index') }}</h1>
 
-        <table class="list"></table>
+        <table class="table list"></table>
     </div>
 
     <!-- The cart page -->
@@ -154,7 +154,7 @@
 
         <div class="card">
             <div class="card-body">
-                <table class="list"></table>
+                <table class="table list"></table>
             </div>
 
             <div class="card-footer">
