@@ -75,12 +75,10 @@
                         password: $('#password').val(),
                     },
                     success: function () {
-
+                        console.log('test');
                     },
                     error: function (xhr) {
-                        var error = JSON.parse(xhr.responseText);
-                        // alert(error.errors[1]);
-                        console.log(error.errors);
+                        alert(Object.values(JSON.parse(xhr.responseText).errors));
                     }
                 })
             });
@@ -142,7 +140,7 @@
                         $.ajax('/login', {
                             dataType: 'json',
                             success: function () {
-                                console.log('asda');
+                                console.log('You are logged in.');
                             }
                         });
                         break;
@@ -237,9 +235,6 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#cart">{{ __('view.pageName.cart') }}</a>
-                    </li>
-                    <li class="nav-item">
-                        <button id="log">log</button>
                     </li>
                 </ul>
             </div>
