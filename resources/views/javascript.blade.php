@@ -14,7 +14,6 @@
         }
 
         var loggedIn = {{ auth()->check() ? '1' : '0' }};
-        var isAdmin = '1';
 
         function __(name) {
             return name;
