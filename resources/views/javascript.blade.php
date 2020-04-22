@@ -20,7 +20,7 @@
         });
 
         $(document).ready(function () {
-            $(document).on('click','.add-to-cart',function(e) {
+            $(document).on('click','.add-to-cart',function (e) {
                 e.preventDefault();
                var id = $(e.target).data('id');
 
@@ -33,7 +33,7 @@
                })
             });
 
-            $(document).on('click', '.delete-from-cart', function(e) {
+            $(document).on('click', '.delete-from-cart', function (e) {
                 e.preventDefault();
                 var id = $(e.target).data('id');
 
