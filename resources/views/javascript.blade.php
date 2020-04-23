@@ -39,9 +39,9 @@
 
         $(document).ready(function () {
             if (loggedIn === 1) {
-                $('#logout').show();
+                $('.logout').show();
             } else {
-                $('#login').show();
+                $('.login').show();
             }
 
             $(document).on('click','.add-to-cart',function (e) {
@@ -171,10 +171,9 @@
                         // User is logged in then redirect.
                         if (loggedIn === 1) {
                             window.location.href = '#index';
-
                             return;
                         }
-                        // Show the cart page
+
                         $('.login').show();
                         break;
                     case '#logout':
@@ -189,6 +188,20 @@
                             headers: {'X-CSRF-TOKEN': $('meta[name="csrf_token"]').attr('content')},
                             success: function () {
                                 window.location.reload();
+                            }
+                        });
+                        break;
+                    case '#products':
+                        $('.products').show();
+
+                        $.ajax('/products', {
+                            dataType: 'json',
+                            contentType:'application/json',
+                            success: function (response) {
+                                $('.products .list').html(renderList(response, 'products'));
+                            },
+                            error: function () {
+                                window.location.href = '#index';
                             }
                         });
                         break;
@@ -213,23 +226,7 @@
 <body>
     <!-- The index page -->
     <div class="page index container">
-        <nav class="navbar navbar-expand-lg">
-            <div class="collapse navbar-collapse">
-                <ul class="navbar-nav mr-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="#cart">{{ __('view.pageName.cart') }}</a>
-                    </li>
-                </ul>
-                <div>
-                    <span id="logout" class="nav-item" style="display: none;">
-                        <a class="nav-link" href="#logout">{{ __('view.logout') }}</a>
-                    </span>
-                    <span id="login" class="nav-item" style="display: none;">
-                        <a class="nav-link" href="#login">{{ __('view.login') }}</a>
-                    </span>
-                </div>
-            </div>
-        </nav>
+       @include('partials.js-navbar')
 
         <h1 class="m-3 d-flex justify-content-center">{{ __('view.pageName.index') }}</h1>
 
@@ -238,15 +235,7 @@
 
     <!-- The cart page -->
     <div class="page cart container">
-        <nav class="navbar navbar-expand-lg">
-            <div class="collapse navbar-collapse">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">{{ __('view.pageName.index') }}</a>
-                    </li>
-                </ul>
-            </div>
-        </nav>
+        @include('partials.js-navbar')
 
         <h1 class="m-3 d-flex justify-content-center">{{ __('view.pageName.cart') }}</h1>
 
@@ -288,18 +277,7 @@
 
     <!-- The login page -->
     <div class="page login container">
-        <nav class="navbar navbar-expand-lg">
-            <div class="collapse navbar-collapse">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">{{ __('view.pageName.index') }}</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#cart">{{ __('view.pageName.cart') }}</a>
-                    </li>
-                </ul>
-            </div>
-        </nav>
+        @include('partials.js-navbar')
 
         <h1 class="m-3 d-flex justify-content-center">{{ __('view.login') }}</h1>
 
@@ -315,6 +293,15 @@
 
             <button type="submit" class="btn btn-primary">{{ __('view.login') }}</button>
         </form>
+    </div>
+
+    <!-- The products page -->
+    <div class="page products container">
+        @include('partials.js-navbar')
+
+        <h1 class="m-3 d-flex justify-content-center">{{ __('view.pageName.products') }}</h1>
+
+        <table class="table list"></table>
     </div>
 </body>
 </html>
