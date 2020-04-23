@@ -11,7 +11,7 @@ class ProductController extends Controller
     public function index(Request $request)
     {
         if ($request->wantsJson() || $request->expectsJson()) {
-            return response()->json([Product::all()], 200);
+            return response()->json(Product::all(), 200);
         }
 
         return view('products.index', ['products' => Product::all()]);
@@ -76,9 +76,13 @@ class ProductController extends Controller
         return redirect()->route('products.index');
     }
 
-    public function destroy($product)
+    public function destroy($product, Request $request)
     {
         Product::findOrFail($product)->delete();
+
+        if ($request->wantsJson() || $request->expectsJson()) {
+            return response()->json([]);
+        }
 
         return redirect()->back();
     }

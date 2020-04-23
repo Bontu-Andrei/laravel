@@ -118,6 +118,20 @@
                 })
             });
 
+            $(document).on('click', '.delete-product', function (e) {
+                e.preventDefault();
+                var id = $(e.target).data('id');
+
+                $.ajax('/products/' + id, {
+                    type: 'delete',
+                    dataType: 'json',
+                    contentType:'application/json',
+                    success: function () {
+                        $(e.target).parent().parent().remove();
+                    }
+                })
+            });
+
             function renderList(products, page) {
                 html = [
                     '<tr>',
@@ -125,6 +139,7 @@
                     '<th>' + __('Description') + '</th>',
                     '<th>' + __('Price') + '</th>',
                     '<th>' + __('Product Image') + '</th>',
+                    page == 'products' ? '<th>' + __('Edit') + '</th>' + '<th>' + __('Delete') + '</th>' :
                     page == 'index' ? '<th>' + __('Add to cart') + '</th>' : '<th>' + __('Delete') + '</th>',
                     '</tr>'
                 ].join('');
@@ -136,6 +151,13 @@
                         '<td>' + __(product.description) + '</td>',
                         '<td>' + __(product.price) + '</td>',
                         '<td><img src="' + __(product.image_url) + '" alt="' + __('product_image') + '" width="100px;" height="100px;"></td>',
+                        page == 'products' ?
+                            '<td>' +
+                                '<button class="btn btn-secondary" data-id="' + product.id + '">' + __('Edit') + '</button>' +
+                            '</td>' +
+                            '<td>' +
+                                '<button class="btn btn-secondary delete-product" data-id="' + product.id + '">' + __('Delete') + '</button>' +
+                            '</td>' :
                         page == 'index' ?
                             '<td>' +
                                 '<button class="btn btn-secondary add-to-cart" data-id="' + product.id + '">' + __('Add') + '</button>' +
@@ -301,7 +323,16 @@
 
         <h1 class="m-3 d-flex justify-content-center">{{ __('view.pageName.products') }}</h1>
 
-        <table class="table list"></table>
+        <div>
+            <table class="table list"></table>
+            <div class="d-flex justify-content-around m-3">
+                <button class="btn btn-sm btn-primary">{{ __('view.add') }}</button>
+
+                <span class="logout" style="display: none;">
+                    <a href="#logout">{{ __('view.logout') }}</a>
+                </span>
+            </div>
+        </div>
     </div>
 </body>
 </html>
