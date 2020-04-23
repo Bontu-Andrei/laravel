@@ -15,10 +15,6 @@
 
         var loggedIn = {{ auth()->check() ? '1' : '0' }};
 
-        function __(name) {
-            return name;
-        }
-
         function hasError(errors, property, elementClassName) {
             if (errors.hasOwnProperty(property)) {
                 var $element = $('.' + elementClassName);
