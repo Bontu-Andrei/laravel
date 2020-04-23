@@ -24,7 +24,7 @@
             }
         }
 
-        function clearCheckoutError(elementClassName) {
+        function clearError(elementClassName) {
             var $element = $('.' + elementClassName);
 
             $element.text('');
@@ -74,9 +74,9 @@
             $('#checkout').on('submit', function (e) {
                 e.preventDefault();
 
-                clearCheckoutError('customer-name-error-info');
-                clearCheckoutError('contact-details-error-info');
-                clearCheckoutError('customer-comments-error-info');
+                clearError('customer-name-error-info');
+                clearError('contact-details-error-info');
+                clearError('customer-comments-error-info');
 
                 $.ajax('/checkout', {
                     type: 'post',
@@ -132,6 +132,34 @@
                 })
             });
 
+            $('#add-product').on('submit', function (e) {
+                e.preventDefault();
+
+                clearError('title-error-info');
+                clearError('description-error-info');
+                clearError('price-error-info');
+                clearError('image-error-info');
+
+                $.ajax('/products', {
+                    type: 'post',
+                    dataType: 'json',
+                    data: new FormData(this),
+                    contentType: false,
+                    processData: false,
+                    success: function () {
+                        window.location.href = '#products';
+                    },
+                    error: function (xhr) {
+                        var errors = JSON.parse(xhr.responseText).errors;
+
+                        hasError(errors, 'title', 'title-error-info');
+                        hasError(errors, 'description', 'description-error-info');
+                        hasError(errors, 'price', 'price-error-info');
+                        hasError(errors, 'image_path', 'image-error-info');
+                    }
+                })
+            });
+
             function renderList(products, page) {
                 html = [
                     '<tr>',
@@ -153,10 +181,10 @@
                         '<td><img src="' + __(product.image_url) + '" alt="' + __('product_image') + '" width="100px;" height="100px;"></td>',
                         page == 'products' ?
                             '<td>' +
-                                '<button class="btn btn-secondary" data-id="' + product.id + '">' + __('Edit') + '</button>' +
+                                '<button class="btn btn-success btn-sm" data-id="' + product.id + '">' + __('Edit') + '</button>' +
                             '</td>' +
                             '<td>' +
-                                '<button class="btn btn-secondary delete-product" data-id="' + product.id + '">' + __('Delete') + '</button>' +
+                                '<button class="btn btn-danger btn-sm delete-product" data-id="' + product.id + '">' + __('Delete') + '</button>' +
                             '</td>' :
                         page == 'index' ?
                             '<td>' +
@@ -226,6 +254,9 @@
                                 window.location.href = '#index';
                             }
                         });
+                        break;
+                    case '#add-product':
+                        $('.add').show();
                         break;
                     default:
                         // If all else fails, always default to index
@@ -326,13 +357,51 @@
         <div>
             <table class="table list"></table>
             <div class="d-flex justify-content-around m-3">
-                <button class="btn btn-sm btn-primary">{{ __('view.add') }}</button>
+                <a class="btn btn-sm btn-primary" href="#add-product">{{ __('view.add') }}</a>
 
                 <span class="logout" style="display: none;">
-                    <a href="#logout">{{ __('view.logout') }}</a>
+                    <a class="btn btn-sm btn-danger" href="#logout">{{ __('view.logout') }}</a>
                 </span>
             </div>
         </div>
+    </div>
+
+    <!-- The add-product page -->
+    <div class="page add container">
+        @include('partials.js-navbar')
+
+        <h1 class="m-3 d-flex justify-content-center">{{ __('view.add') }}</h1>
+
+        <form id="add-product" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="title">{{ __('view.label.title') }}</label>
+                <input type="text" name="title" class="form-control title" id="title">
+                <span class="title-error-info text-danger" style="display: none;"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="description">{{ __('view.label.description') }}</label>
+                <input type="text" name="description" class="form-control description" id="description">
+                <span class="description-error-info text-danger" style="display: none;"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="price">{{ __('view.label.price') }}</label>
+                <input type="text" name="price" class="form-control price" id="price">
+                <span class="price-error-info text-danger" style="display: none;"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="image">{{ __('view.image') }}</label>
+                <input type="file" name="image_path" class="form-control-file image" id="image">
+                <span class="image-error-info text-danger" style="display: none;"></span>
+            </div>
+
+            <div class="d-flex justify-content-around m-3">
+                <a href="#products">{{ __('view.pageName.products') }}</a>
+                <button type="submit" class="btn btn-success btn-sm">{{ __('view.save') }}</button>
+            </div>
+        </form>
     </div>
 </body>
 </html>
