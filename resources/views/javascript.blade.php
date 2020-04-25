@@ -13,6 +13,8 @@
             return name;
         }
 
+        var editedProduct = {};
+        var products = [];
         var loggedIn = {{ auth()->check() ? '1' : '0' }};
 
         function hasError(errors, property, elementClassName) {
@@ -132,7 +134,7 @@
                 })
             });
 
-            $('#add-product').on('submit', function (e) {
+            $('.addProduct').on('submit', function (e) {
                 e.preventDefault();
 
                 clearError('title-error-info');
@@ -160,6 +162,42 @@
                 })
             });
 
+            $(document).on('click', '.edit-product', function (e) {
+                e.preventDefault();
+
+                var id = $(e.target).data('id');
+
+                for (var i = 0; i < products.length; i++) {
+                    if (parseInt(id) === parseInt(products[i].id)) {
+                        editedProduct = products[i];
+                    }
+                }
+
+                window.location.href = '#edit-product';
+            })
+
+            $(document).on('click', '.save-update-product', function (e) {
+                e.preventDefault();
+
+                $.ajax('/products/' + editedProduct.id, {
+                    type: 'put',
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    data: {
+                        title: $('.title').val(),
+                        description: $('.description').val(),
+                        price: $('.price').val(),
+                        image_path: $('.image').val(),
+                    },
+                    success: function () {
+                        console.log('successssss');
+                    },
+                    error: function (xhr) {
+                        console.log(xhr.responseText);
+                    }
+                })
+            })
+
             function renderList(products, page) {
                 html = [
                     '<tr>',
@@ -181,7 +219,7 @@
                         '<td><img src="' + __(product.image_url) + '" alt="' + __('product_image') + '" width="100px;" height="100px;"></td>',
                         page == 'products' ?
                             '<td>' +
-                                '<button class="btn btn-success btn-sm" data-id="' + product.id + '">' + __('Edit') + '</button>' +
+                                '<button class="btn btn-success btn-sm edit-product" data-id="' + product.id + '">' + __('Edit') + '</button>' +
                             '</td>' +
                             '<td>' +
                                 '<button class="btn btn-danger btn-sm delete-product" data-id="' + product.id + '">' + __('Delete') + '</button>' +
@@ -199,6 +237,28 @@
                 return html;
             }
 
+            function renderOrdersList(orders) {
+                html = [
+                    '<tr>',
+                    '<th>' + __('Customer Name') + '</th>',
+                    '<th>' + __('Customer Details') + '</th>',
+                    '<th>' + __('Customer Comments') + '</th>',
+                    '<th>' + __('Product Price Sum') + '</th>',
+                    '</tr>'
+                ].join('');
+
+                $.each(orders, function (key, order) {
+                    html += [
+                        '<tr>',
+                        '<td>' + __(order.customer_name) + '</td>',
+                        '<td>' + __(order.customer_details) + '</td>',
+                        '<td>' + __(order.customer_comments) + '</td>',
+                        '<td>' + __(order.product_price_sum) + '</td>',
+                        '</tr>'
+                    ].join('');
+                });
+                return html;
+            }
             /**
              * URL hash change handler
              */
@@ -248,6 +308,8 @@
                             dataType: 'json',
                             contentType:'application/json',
                             success: function (response) {
+                                products = response;
+
                                 $('.products .list').html(renderList(response, 'products'));
                             },
                             error: function () {
@@ -257,6 +319,31 @@
                         break;
                     case '#add-product':
                         $('.add').show();
+                        break;
+                    case '#edit-product':
+                        $('.edit').show();
+                        var img = $('<img style="width: 100px; height: 100px; margin: 10px;">');
+
+                        $('.title').val(editedProduct.title)
+                        $('.description').val(editedProduct.description)
+                        $('.price').val(editedProduct.price)
+
+                        img.attr('src', '/storage/' + editedProduct.image_path);
+                        img.appendTo('.image-to-edit');
+                        break;
+                    case '#orders':
+                        $('.orders').show();
+
+                        $.ajax('/orders', {
+                            dataType: 'json',
+                            contentType:'application/json',
+                            success: function (response) {
+                                $('.orders .list').html(renderOrdersList(response));
+                            },
+                            error: function () {
+                                window.location.href = '#index';
+                            }
+                        });
                         break;
                     default:
                         // If all else fails, always default to index
@@ -372,36 +459,25 @@
 
         <h1 class="m-3 d-flex justify-content-center">{{ __('view.add') }}</h1>
 
-        <form id="add-product" enctype="multipart/form-data">
-            <div class="form-group">
-                <label for="title">{{ __('view.label.title') }}</label>
-                <input type="text" name="title" class="form-control title" id="title">
-                <span class="title-error-info text-danger" style="display: none;"></span>
-            </div>
+        @include('partials.js-add-edit-form')
+    </div>
 
-            <div class="form-group">
-                <label for="description">{{ __('view.label.description') }}</label>
-                <input type="text" name="description" class="form-control description" id="description">
-                <span class="description-error-info text-danger" style="display: none;"></span>
-            </div>
+    <!-- The edit-product page -->
+    <div class="page edit container">
+        @include('partials.js-navbar')
 
-            <div class="form-group">
-                <label for="price">{{ __('view.label.price') }}</label>
-                <input type="text" name="price" class="form-control price" id="price">
-                <span class="price-error-info text-danger" style="display: none;"></span>
-            </div>
+        <h1 class="m-3 d-flex justify-content-center">{{ __('view.edit') }}</h1>
 
-            <div class="form-group">
-                <label for="image">{{ __('view.image') }}</label>
-                <input type="file" name="image_path" class="form-control-file image" id="image">
-                <span class="image-error-info text-danger" style="display: none;"></span>
-            </div>
+        @include('partials.js-add-edit-form')
+    </div>
 
-            <div class="d-flex justify-content-around m-3">
-                <a href="#products">{{ __('view.pageName.products') }}</a>
-                <button type="submit" class="btn btn-success btn-sm">{{ __('view.save') }}</button>
-            </div>
-        </form>
+    <!-- The orders page -->
+    <div class="page orders container">
+        @include('partials.js-navbar')
+
+        <h1 class="m-3 d-flex justify-content-center">{{ __('view.pageName.orders') }}</h1>
+
+        <table class="table list"></table>
     </div>
 </body>
 </html>

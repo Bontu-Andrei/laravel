@@ -12,6 +12,10 @@
             <li class="nav-item">
                 <a class="nav-link" href="#products">{{ __('view.pageName.products') }}</a>
             </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="#orders">{{ __('view.pageName.orders') }}</a>
+            </li>
         </ul>
 
         <div>
