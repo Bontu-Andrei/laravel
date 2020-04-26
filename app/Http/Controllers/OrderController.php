@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Order;
+use App\OrderProduct;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
@@ -16,9 +17,13 @@ class OrderController extends Controller
         return view('orders.index', ['orders' => Order::all()]);
     }
 
-    public function show($orderId)
+    public function show($orderId, Request $request)
     {
         $order = Order::findOrFail($orderId);
+
+        if ($request->wantsJson() || $request->expectsJson()) {
+            return response()->json($order);
+        }
 
         return view('orders.show', [
             'order' => $order,

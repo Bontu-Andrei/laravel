@@ -15,6 +15,7 @@
 
         var editedProduct = {};
         var products = [];
+        var orders = [];
         var loggedIn = {{ auth()->check() ? '1' : '0' }};
 
         function hasError(errors, property, elementClassName) {
@@ -198,6 +199,32 @@
                 })
             })
 
+            $(document).on('click', '.order-details', function (e) {
+
+                window.location.href = '#order';
+
+                e.preventDefault();
+
+                var id = $(e.target).data('id');
+
+                for (var i = 0; i < orders.length; i++) {
+                    if (parseInt(id) === parseInt(orders[i].id)) {
+                        order = orders[i];
+                    }
+                }
+
+                $.ajax('/order/' + order.id, {
+                    dataType: 'json',
+                    contentType:'application/json',
+                    success: function (response) {
+                        $('.list').html(renderOrderDetails(response));
+                        console.log(response)
+                    },
+                    error: function (xhr) {
+                        console.log(xhr.responseText);
+                    }
+                })
+            })
             function renderList(products, page) {
                 html = [
                     '<tr>',
@@ -244,6 +271,7 @@
                     '<th>' + __('Customer Details') + '</th>',
                     '<th>' + __('Customer Comments') + '</th>',
                     '<th>' + __('Product Price Sum') + '</th>',
+                    '<th>' + __('Order Details') + '</th>',
                     '</tr>'
                 ].join('');
 
@@ -254,6 +282,42 @@
                         '<td>' + __(order.customer_details) + '</td>',
                         '<td>' + __(order.customer_comments) + '</td>',
                         '<td>' + __(order.product_price_sum) + '</td>',
+                        '<td>' +
+                            '<button class="btn btn-success btn-sm order-details" data-id="' + order.id + '">' + __('Order Details') + '</button>' +
+                        '</td>',
+                        '</tr>'
+                    ].join('');
+                });
+                return html;
+            }
+
+            function renderOrderDetails(order) {
+                html = [
+                    '<tr>',
+                    '<th>' + __('Customer Name') + '</th>',
+                    '<th>' + __('Customer Details') + '</th>',
+                    '<th>' + __('Customer Comments') + '</th>',
+                    '<th>' + __('Order Date') + '</th>',
+                    '<th>' + __('Product Price Sum') + '</th>',
+                    '</tr>'
+                ].join('');
+
+                html += [
+                    '<tr>',
+                    '<td>' + __(order.customer_name) + '</td>',
+                    '<td>' + __(order.customer_details) + '</td>',
+                    '<td>' + __(order.customer_comments) + '</td>',
+                    '<td>' + __(order.created_at) + '</td>',
+                    '<td>' + __(order.product_price_sum) + '</td>',
+                    '</tr>'
+                ].join('');
+
+                $.each(orders[products], function (key, orderProduct) {
+                    html += [
+                        '<tr>',
+                        '<td>' + __(orderProduct.title) + '</td>',
+                        '<td>' + __(orderProduct.description) + '</td>',
+                        '<td>' + __(orderProduct.price) + '</td>',
                         '</tr>'
                     ].join('');
                 });
@@ -338,12 +402,17 @@
                             dataType: 'json',
                             contentType:'application/json',
                             success: function (response) {
+                                orders = response;
                                 $('.orders .list').html(renderOrdersList(response));
                             },
                             error: function () {
                                 window.location.href = '#index';
                             }
                         });
+                        break;
+                    case '#order':
+                        $('.order').show();
+
                         break;
                     default:
                         // If all else fails, always default to index
@@ -478,6 +547,16 @@
         <h1 class="m-3 d-flex justify-content-center">{{ __('view.pageName.orders') }}</h1>
 
         <table class="table list"></table>
+    </div>
+
+    <!-- The order-details page -->
+    <div class="page order container">
+        @include('partials.js-navbar')
+
+        <h1 class="m-3 d-flex justify-content-center">{{ __('view.orderDetails') }}</h1>
+
+        <table class="list"></table>
+
     </div>
 </body>
 </html>

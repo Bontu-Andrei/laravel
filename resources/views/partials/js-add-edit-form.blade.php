@@ -1,5 +1,4 @@
-<form class="addProduct editProduct" enctype="multipart/form-data" method="post">
-    <input type="hidden" name="_method" value="put">
+<form class="addProduct editProduct" enctype="multipart/form-data">
     <div class="form-group">
         <label>{{ __('view.label.title') }}</label>
         <input type="text" name="title" class="form-control title">
