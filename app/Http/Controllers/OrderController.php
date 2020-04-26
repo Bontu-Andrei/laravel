@@ -19,7 +19,7 @@ class OrderController extends Controller
 
     public function show($orderId, Request $request)
     {
-        $order = Order::findOrFail($orderId);
+        $order = Order::with(['products'])->findOrFail($orderId);
 
         if ($request->wantsJson() || $request->expectsJson()) {
             return response()->json($order);

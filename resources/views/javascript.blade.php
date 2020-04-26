@@ -180,18 +180,30 @@
             $(document).on('click', '.save-update-product', function (e) {
                 e.preventDefault();
 
+                var editPage = $('.edit');
+                var $title = editPage.find('.title');
+                var $description = editPage.find('.description');
+                var $price = editPage.find('.price');
+                var imageFile = editPage.find('.image')[0].files;
+
+                var form = new FormData();
+                form.append('_method', 'put');
+                form.append('title', $title.val());
+                form.append('description', $description.val());
+                form.append('price', $price.val());
+
+                if (imageFile.length > 0) {
+                    form.append('image_path', imageFile[0]);
+                }
+
                 $.ajax('/products/' + editedProduct.id, {
-                    type: 'put',
+                    type: 'post',
                     dataType: 'json',
-                    contentType: 'application/json',
-                    data: {
-                        title: $('.title').val(),
-                        description: $('.description').val(),
-                        price: $('.price').val(),
-                        image_path: $('.image').val(),
-                    },
+                    contentType: false,
+                    data: form,
+                    processData: false,
                     success: function () {
-                        console.log('successssss');
+                        window.location.href = '#products';
                     },
                     error: function (xhr) {
                         console.log(xhr.responseText);
@@ -218,13 +230,13 @@
                     contentType:'application/json',
                     success: function (response) {
                         $('.list').html(renderOrderDetails(response));
-                        console.log(response)
                     },
                     error: function (xhr) {
-                        console.log(xhr.responseText);
+                        alert(xhr.responseText);
                     }
                 })
             })
+
             function renderList(products, page) {
                 html = [
                     '<tr>',
@@ -294,33 +306,50 @@
             function renderOrderDetails(order) {
                 html = [
                     '<tr>',
-                    '<th>' + __('Customer Name') + '</th>',
-                    '<th>' + __('Customer Details') + '</th>',
-                    '<th>' + __('Customer Comments') + '</th>',
-                    '<th>' + __('Order Date') + '</th>',
-                    '<th>' + __('Product Price Sum') + '</th>',
-                    '</tr>'
-                ].join('');
+                        '<th>' + __('Customer Name') + '</th>',
+                        '<td colspan="4">' + __(order.customer_name) + '</td>',
+                    '</tr>',
 
-                html += [
                     '<tr>',
-                    '<td>' + __(order.customer_name) + '</td>',
-                    '<td>' + __(order.customer_details) + '</td>',
-                    '<td>' + __(order.customer_comments) + '</td>',
-                    '<td>' + __(order.created_at) + '</td>',
-                    '<td>' + __(order.product_price_sum) + '</td>',
-                    '</tr>'
+                        '<th>' + __('Customer Details') + '</th>',
+                        '<td colspan="4">' + __(order.customer_details) + '</td>',
+                    '</tr>',
+
+                    '<tr>',
+                        '<th>' + __('Customer Comments') + '</th>',
+                        '<td colspan="4">' + __(order.customer_comments) + '</td>',
+                    '</tr>',
+
+                    '<tr>',
+                        '<th>' + __('Order Date') + '</th>',
+                        '<td colspan="4">' + __(order.created_at) + '</td>',
+                    '</tr>',
+
+                    '<tr>',
+                        '<th>' + __('Total Price') + '</th>',
+                        '<td colspan="4">' + __(order.product_price_sum) + '</td>',
+                    '</tr>',
+
+                    '<tr>',
+                        '<th rowspan="' + order.products.length + '1' + '">' + __('Products') + '</th>',
+                        '<th>' + __('Title') + '</th>',
+                        '<th>' + __('Description') + '</th>',
+                        '<th>' + __('Price') + '</th>',
+                        '<th>' + __('Image') + '</th>',
+                    '</tr>',
                 ].join('');
 
-                $.each(orders[products], function (key, orderProduct) {
+                $.each(order.products, function (key, orderProduct) {
                     html += [
                         '<tr>',
-                        '<td>' + __(orderProduct.title) + '</td>',
-                        '<td>' + __(orderProduct.description) + '</td>',
-                        '<td>' + __(orderProduct.price) + '</td>',
+                            '<td>' + __(orderProduct.title) + '</td>',
+                            '<td>' + __(orderProduct.description) + '</td>',
+                            '<td>' + __(orderProduct.price) + '</td>',
+                            '<td><img src="' + __(orderProduct.image_url) + '" alt="' + __('product_image') + '" width="100px;" height="100px;"></td>',
                         '</tr>'
                     ].join('');
                 });
+
                 return html;
             }
             /**
@@ -385,15 +414,22 @@
                         $('.add').show();
                         break;
                     case '#edit-product':
-                        $('.edit').show();
+                        var editPage = $('.edit');
+
+                        editPage.show();
+
+                        var $title = editPage.find('.title');
+                        var $description = editPage.find('.description');
+                        var $price = editPage.find('.price');
+
                         var img = $('<img style="width: 100px; height: 100px; margin: 10px;">');
-
-                        $('.title').val(editedProduct.title)
-                        $('.description').val(editedProduct.description)
-                        $('.price').val(editedProduct.price)
-
-                        img.attr('src', '/storage/' + editedProduct.image_path);
+                        img.attr('src', editedProduct.image_url);
                         img.appendTo('.image-to-edit');
+
+                        $title.val(editedProduct.title)
+                        $description.val(editedProduct.description)
+                        $price.val(editedProduct.price)
+
                         break;
                     case '#orders':
                         $('.orders').show();
@@ -412,7 +448,6 @@
                         break;
                     case '#order':
                         $('.order').show();
-
                         break;
                     default:
                         // If all else fails, always default to index
@@ -555,7 +590,7 @@
 
         <h1 class="m-3 d-flex justify-content-center">{{ __('view.orderDetails') }}</h1>
 
-        <table class="list"></table>
+        <table class="list table"></table>
 
     </div>
 </body>
