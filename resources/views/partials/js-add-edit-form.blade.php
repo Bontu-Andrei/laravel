@@ -26,6 +26,6 @@
 
     <div class="d-flex justify-content-around m-3">
         <a href="#products">{{ __('view.pageName.products') }}</a>
-        <button type="submit" class="btn btn-success btn-sm save-update-product">{{ __('view.save') }}</button>
+        <button type="submit" class="btn btn-success btn-sm save-update-product add-product-btn">{{ __('view.save') }}</button>
     </div>
 </form>

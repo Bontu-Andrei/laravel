@@ -135,7 +135,7 @@
                 })
             });
 
-            $('.addProduct').on('submit', function (e) {
+            $('#addProduct').on('submit', function (e) {
                 e.preventDefault();
 
                 clearError('title-error-info');
@@ -177,36 +177,42 @@
                 window.location.href = '#edit-product';
             })
 
-            $(document).on('click', '.save-update-product', function (e) {
+            $(document).on('click', '#save-update-product', function (e) {
                 e.preventDefault();
 
-                var editPage = $('.edit');
-                var $title = editPage.find('.title');
-                var $description = editPage.find('.description');
-                var $price = editPage.find('.price');
-                var imageFile = editPage.find('.image')[0].files;
+                clearError('title-error-info');
+                clearError('description-error-info');
+                clearError('price-error-info');
+                clearError('image-error-info');
 
-                var form = new FormData();
-                form.append('_method', 'put');
-                form.append('title', $title.val());
-                form.append('description', $description.val());
-                form.append('price', $price.val());
+                var imageFile = $('#image-update')[0].files;
+
+                var updateForm = new FormData();
+                updateForm.append('_method', 'put');
+                updateForm.append('title', $('#title-update').val());
+                updateForm.append('description', $('#description-update').val());
+                updateForm.append('price', $('#price-update').val());
 
                 if (imageFile.length > 0) {
-                    form.append('image_path', imageFile[0]);
+                    updateForm.append('image_path', imageFile[0]);
                 }
 
                 $.ajax('/products/' + editedProduct.id, {
                     type: 'post',
                     dataType: 'json',
                     contentType: false,
-                    data: form,
+                    data: updateForm,
                     processData: false,
                     success: function () {
                         window.location.href = '#products';
                     },
                     error: function (xhr) {
-                        console.log(xhr.responseText);
+                        var errors = JSON.parse(xhr.responseText).errors;
+
+                        hasError(errors, 'title', 'title-error-info');
+                        hasError(errors, 'description', 'description-error-info');
+                        hasError(errors, 'price', 'price-error-info');
+                        hasError(errors, 'image_path', 'image-error-info');
                     }
                 })
             })
@@ -414,21 +420,17 @@
                         $('.add').show();
                         break;
                     case '#edit-product':
-                        var editPage = $('.edit');
+                        $('.edit').show();
 
-                        editPage.show();
+                        if ($('#show-image-edit-form').empty()) {
+                            var img = $('<img style="width: 100px; height: 100px; margin: 10px;">');
+                            img.attr('src', editedProduct.image_url);
+                            img.appendTo('#show-image-edit-form');
+                        }
 
-                        var $title = editPage.find('.title');
-                        var $description = editPage.find('.description');
-                        var $price = editPage.find('.price');
-
-                        var img = $('<img style="width: 100px; height: 100px; margin: 10px;">');
-                        img.attr('src', editedProduct.image_url);
-                        img.appendTo('.image-to-edit');
-
-                        $title.val(editedProduct.title)
-                        $description.val(editedProduct.description)
-                        $price.val(editedProduct.price)
+                        $('#title-update').val(editedProduct.title)
+                        $('#description-update').val(editedProduct.description)
+                        $('#price-update').val(editedProduct.price)
 
                         break;
                     case '#orders':
@@ -563,7 +565,37 @@
 
         <h1 class="m-3 d-flex justify-content-center">{{ __('view.add') }}</h1>
 
-        @include('partials.js-add-edit-form')
+        <form id="addProduct" enctype="multipart/form-data">
+            <div class="form-group">
+                <label>{{ __('view.label.title') }}</label>
+                <input type="text" name="title" class="form-control title">
+                <span class="title-error-info text-danger" style="display: none;"></span>
+            </div>
+
+            <div class="form-group">
+                <label>{{ __('view.label.description') }}</label>
+                <input type="text" name="description" class="form-control description">
+                <span class="description-error-info text-danger" style="display: none;"></span>
+            </div>
+
+            <div class="form-group">
+                <label>{{ __('view.label.price') }}</label>
+                <input type="text" name="price" class="form-control price">
+                <span class="price-error-info text-danger" style="display: none;"></span>
+            </div>
+
+            <div class="form-group">
+                <label>{{ __('view.image') }}</label>
+                <input type="file" name="image_path" class="form-control-file image">
+                <span class="image-error-info text-danger" style="display: none;"></span>
+            </div>
+
+            <div class="d-flex justify-content-around m-3">
+                <a href="#products">{{ __('view.pageName.products') }}</a>
+                <button type="submit" class="btn btn-success btn-sm">{{ __('view.save') }}</button>
+            </div>
+        </form>
+
     </div>
 
     <!-- The edit-product page -->
@@ -572,7 +604,37 @@
 
         <h1 class="m-3 d-flex justify-content-center">{{ __('view.edit') }}</h1>
 
-        @include('partials.js-add-edit-form')
+        <form id="editProduct" enctype="multipart/form-data">
+            <div class="form-group">
+                <label>{{ __('view.label.title') }}</label>
+                <input type="text" name="title" class="form-control" id="title-update">
+                <span class="title-error-info text-danger" style="display: none;"></span>
+            </div>
+
+            <div class="form-group">
+                <label>{{ __('view.label.description') }}</label>
+                <input type="text" name="description" class="form-control" id="description-update">
+                <span class="description-error-info text-danger" style="display: none;"></span>
+            </div>
+
+            <div class="form-group">
+                <label>{{ __('view.label.price') }}</label>
+                <input type="text" name="price" class="form-control" id="price-update">
+                <span class="price-error-info text-danger" style="display: none;"></span>
+            </div>
+
+            <div class="form-group">
+                <label>{{ __('view.image') }}</label>
+                <input type="file" name="image_path" class="form-control-file" id="image-update">
+                <span id="show-image-edit-form"></span>
+                <span class="image-error-info text-danger" style="display: none;"></span>
+            </div>
+
+            <div class="d-flex justify-content-around m-3">
+                <a href="#products">{{ __('view.pageName.products') }}</a>
+                <button type="submit" class="btn btn-success btn-sm" id="save-update-product">{{ __('view.save') }}</button>
+            </div>
+        </form>
     </div>
 
     <!-- The orders page -->
