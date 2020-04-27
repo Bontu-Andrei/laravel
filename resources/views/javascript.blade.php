@@ -105,6 +105,9 @@
             $('#loginForm').on('submit', function (e) {
                 e.preventDefault();
 
+                clearError('email-error-info');
+                clearError('password-error-info');
+
                 $.ajax('/login', {
                     type: 'post',
                     dataType: 'json',
@@ -116,7 +119,10 @@
                         window.location.reload();
                     },
                     error: function (xhr) {
-                        alert(Object.values(JSON.parse(xhr.responseText).errors));
+                        var errors = JSON.parse(xhr.responseText).errors;
+
+                        hasError(errors, 'email', 'email-error-info');
+                        hasError(errors, 'password', 'password-error-info');
                     }
                 })
             });
@@ -237,10 +243,26 @@
                     success: function (response) {
                         $('.list').html(renderOrderDetails(response));
                     },
-                    error: function (xhr) {
-                        alert(xhr.responseText);
+                    error: function () {
+                        window.location.href = '#orders';
                     }
                 })
+            })
+
+            $(document).on('click', '.review', function (e) {
+                e.preventDefault();
+
+                window.location.href = '#reviews';
+
+                var id = $(e.target).data('id');
+
+                $.ajax('/reviews?id='+id+'&type=product', {
+                    dataType: 'json',
+                    success: function (response) {
+                        $('.list').html(renderReviewsList(response));
+                        console.log(response)
+                    }
+                });
             })
 
             function renderList(products, page) {
@@ -251,7 +273,7 @@
                     '<th>' + __('Price') + '</th>',
                     '<th>' + __('Product Image') + '</th>',
                     page == 'products' ? '<th>' + __('Edit') + '</th>' + '<th>' + __('Delete') + '</th>' :
-                    page == 'index' ? '<th>' + __('Add to cart') + '</th>' : '<th>' + __('Delete') + '</th>',
+                    page == 'index' ? '<th>' + __('Add to cart') + '</th>' + '<th>' + __('Reviews') + '</th>' : '<th>' + __('Delete') + '</th>',
                     '</tr>'
                 ].join('');
 
@@ -272,6 +294,9 @@
                         page == 'index' ?
                             '<td>' +
                                 '<button class="btn btn-secondary add-to-cart" data-id="' + product.id + '">' + __('Add') + '</button>' +
+                            '</td>' +
+                            '<td>' +
+                                '<button data-id="' + product.id + '" class="btn btn-secondary review">' + __('Add Review') + '</button>' +
                             '</td>' :
                             '<td>' +
                                 '<button class="btn btn-secondary delete-from-cart" data-id="' + product.id + '">' + __('Delete') + '</button>' +
@@ -353,6 +378,33 @@
                             '<td>' + __(orderProduct.price) + '</td>',
                             '<td><img src="' + __(orderProduct.image_url) + '" alt="' + __('product_image') + '" width="100px;" height="100px;"></td>',
                         '</tr>'
+                    ].join('');
+                });
+
+                return html;
+            }
+
+            function renderReviewsList(reviews) {
+                html = [].join('');
+
+                $.each(reviews, function (key, review) {
+                    html += [
+                        '<div class="card" style="width: 80%; margin: 10px auto;">' +
+                            '<div class="card-body">',
+                                '<div>',
+                                    '<span><b>' + __('Rating') + '</b></span>',
+                                    '<span>' + review.rating + '</span>',
+                                '</div>',
+                                '<div>',
+                                    '<span><b>' + __('Title') + '</b></span>',
+                                    '<span>' + review.title + '</span>',
+                                '</div>',
+                                '<div>',
+                                    '<span><b>' + __('Description') + '</b></span>',
+                                    '<span>' + review.description + '</span>',
+                                '</div>',
+                            '</div>',
+                        '</div>'
                     ].join('');
                 });
 
@@ -451,6 +503,10 @@
                     case '#order':
                         $('.order').show();
                         break;
+                    case '#reviews':
+                        $('.reviews').show();
+
+                        break;
                     default:
                         // If all else fails, always default to index
                         // Show the index page
@@ -531,10 +587,13 @@
             <div class="form-group">
                 <label for="email">{{ __('view.email') }}</label>
                 <input type="email" name="email" class="form-control" id="email">
+                <span class="email-error-info text-danger" style="display: none;"></span>
             </div>
+
             <div class="form-group">
                 <label for="password">{{ __('view.password') }}</label>
                 <input type="password" name="password" class="form-control" id="password">
+                <span class="password-error-info text-danger" style="display: none;"></span>
             </div>
 
             <button type="submit" class="btn btn-primary">{{ __('view.login') }}</button>
@@ -604,7 +663,7 @@
 
         <h1 class="m-3 d-flex justify-content-center">{{ __('view.edit') }}</h1>
 
-        <form id="editProduct" enctype="multipart/form-data">
+        <form enctype="multipart/form-data">
             <div class="form-group">
                 <label>{{ __('view.label.title') }}</label>
                 <input type="text" name="title" class="form-control" id="title-update">
@@ -654,6 +713,15 @@
 
         <table class="list table"></table>
 
+    </div>
+
+    <!-- The reviews page -->
+    <div class="page reviews container">
+        @include('partials.js-navbar')
+
+        <h1 class="m-3 d-flex justify-content-center">{{ __('view.review') }}</h1>
+
+        <div class="list"></div>
     </div>
 </body>
 </html>

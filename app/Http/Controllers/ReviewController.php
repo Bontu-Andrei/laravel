@@ -20,6 +20,10 @@ class ReviewController extends Controller
 
         $reviews = Review::where('reviewable_id', $request->query('id'))->where('reviewable_type', $type)->get();
 
+        if ($request->wantsJson() || $request->expectsJson()) {
+            return response()->json($reviews);
+        }
+
         return view('reviews.index', [
             'reviews' => $reviews,
             'type' => $request->query('type'),
