@@ -47,9 +47,10 @@
                 $('.login').show();
             }
 
-            $(document).on('click','.add-to-cart',function (e) {
-                e.preventDefault();
-               var id = $(e.target).data('id');
+            $(document).on('click','.add-to-cart', function (event) {
+                event.preventDefault();
+
+               var id = $(event.target).data('id');
 
                $.ajax('/cart/' + id, {
                    type: 'post',
@@ -60,9 +61,9 @@
                })
             });
 
-            $(document).on('click', '.delete-from-cart', function (e) {
-                e.preventDefault();
-                var id = $(e.target).data('id');
+            $(document).on('click', '.delete-from-cart', function (event) {
+                event.preventDefault();
+                var id = $(event.target).data('id');
 
                 $.ajax('/cart/' + id, {
                     type: 'delete',
@@ -74,8 +75,8 @@
                 })
             });
 
-            $('#checkout').on('submit', function (e) {
-                e.preventDefault();
+            $('#checkout').on('submit', function (event) {
+                event.preventDefault();
 
                 clearError('customer-name-error-info');
                 clearError('contact-details-error-info');
@@ -102,8 +103,8 @@
                 })
             })
 
-            $('#loginForm').on('submit', function (e) {
-                e.preventDefault();
+            $('#loginForm').on('submit', function (event) {
+                event.preventDefault();
 
                 clearError('email-error-info');
                 clearError('password-error-info');
@@ -127,22 +128,22 @@
                 })
             });
 
-            $(document).on('click', '.delete-product', function (e) {
-                e.preventDefault();
-                var id = $(e.target).data('id');
+            $(document).on('click', '.delete-product', function (event) {
+                event.preventDefault();
+                var id = $(event.target).data('id');
 
                 $.ajax('/products/' + id, {
                     type: 'delete',
                     dataType: 'json',
                     contentType:'application/json',
                     success: function () {
-                        $(e.target).parent().parent().remove();
+                        $(event.target).parent().parent().remove();
                     }
                 })
             });
 
-            $('#addProduct').on('submit', function (e) {
-                e.preventDefault();
+            $('#addProduct').on('submit', function (event) {
+                event.preventDefault();
 
                 clearError('title-error-info');
                 clearError('description-error-info');
@@ -169,8 +170,8 @@
                 })
             });
 
-            $(document).on('click', '.edit-product', function (e) {
-                e.preventDefault();
+            $(document).on('click', '.edit-product', function (event) {
+                event.preventDefault();
 
                 var id = $(e.target).data('id');
 
@@ -183,8 +184,8 @@
                 window.location.href = '#edit-product';
             })
 
-            $(document).on('click', '#save-update-product', function (e) {
-                e.preventDefault();
+            $(document).on('click', '#save-update-product', function (event) {
+                event.preventDefault();
 
                 clearError('title-error-info');
                 clearError('description-error-info');
@@ -223,11 +224,11 @@
                 })
             })
 
-            $(document).on('click', '.order-details', function (e) {
+            $(document).on('click', '.order-details', function (event) {
 
                 window.location.href = '#order';
 
-                e.preventDefault();
+                event.preventDefault();
 
                 var id = $(e.target).data('id');
 
@@ -249,12 +250,12 @@
                 })
             })
 
-            $(document).on('click', '.review', function (e) {
-                e.preventDefault();
+            $(document).on('click', '.review', function (event) {
+                event.preventDefault();
 
                 window.location.href = '#reviews';
 
-                var id = $(e.target).data('id');
+                var id = $(event.target).data('id');
 
                 $.ajax('/reviews?id='+id+'&type=product', {
                     dataType: 'json',
@@ -392,15 +393,15 @@
                         '<div class="card" style="width: 80%; margin: 10px auto;">' +
                             '<div class="card-body">',
                                 '<div>',
-                                    '<span><b>' + __('Rating') + '</b></span>',
+                                    '<span class="mr-1"><b>' + __('Rating') + '</b></span>',
                                     '<span>' + review.rating + '</span>',
                                 '</div>',
                                 '<div>',
-                                    '<span><b>' + __('Title') + '</b></span>',
+                                    '<span class="mr-1"><b>' + __('Title') + '</b></span>',
                                     '<span>' + review.title + '</span>',
                                 '</div>',
                                 '<div>',
-                                    '<span><b>' + __('Description') + '</b></span>',
+                                    '<span class="mr-1"><b>' + __('Description') + '</b></span>',
                                     '<span>' + review.description + '</span>',
                                 '</div>',
                             '</div>',
@@ -722,6 +723,70 @@
         <h1 class="m-3 d-flex justify-content-center">{{ __('view.review') }}</h1>
 
         <div class="list"></div>
+
+        <div class="d-flex justify-content-center">
+            <form id="addReview">
+                <div>
+                    <div>
+                        <label for="rating"><b>{{ __('view.rating') }}</b></label>
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                                <input type="radio" name="rating" id="rating" value="5" {{ old('rating') == "5" ? 'checked' : '' }}/> 5
+                            </div>
+
+                            <div class="input-group-text">
+                                <input type="radio" name="rating" id="rating" value="4" {{ old('rating') == "4" ? 'checked' : '' }}/> 4
+                            </div>
+
+                            <div class="input-group-text">
+                                <input type="radio" name="rating" id="rating" value="3" {{ old('rating') == "3" ? 'checked' : '' }}/> 3
+                            </div>
+
+                            <div class="input-group-text">
+                                <input type="radio" name="rating" id="rating" value="2" {{ old('rating') == "2" ? 'checked' : '' }}/> 2
+                            </div>
+
+                            <div class="input-group-text">
+                                <input type="radio" name="rating" id="rating" value="1" {{ old('rating') == "1" ? 'checked' : '' }}/> 1
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div>
+                        <label for="title"><b>{{ __('view.label.title') }}</b></label>
+                    </div>
+
+                    <input type="text"
+                           class="form-control"
+                           id="title"
+                           name="title"
+                           value="{{ old('title') }}"
+                           placeholder="{{ __('view.label.title') }}">
+
+                </div>
+
+                <div class="form-group">
+                    <div>
+                        <label for="description"><b>{{ __('view.label.description') }}</b></label>
+                    </div>
+
+                    <input name="description"
+                           class="form-control"
+                           id="description"
+                           value="{{ old('description') }}"
+                           placeholder="{{ __('view.label.description') }}">
+                </div>
+
+                <div class="text-center mb-5">
+                    <button class="btn btn-primary btn-sm" type="submit" name="review">{{ __('view.addReview') }}</button>
+                </div>
+            </form>
+        </div>
     </div>
 </body>
 </html>
