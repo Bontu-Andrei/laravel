@@ -18,7 +18,9 @@
         var orders = [];
         var reviewType = '';
         var reviewableIdProduct = '';
+        var reviewableIdOrder = '';
         var loggedIn = {{ auth()->check() ? '1' : '0' }};
+        var loggedInAdmin = {{ auth()->check() && auth()->user()->is_admin ? '1' : '0' }};
 
         function hasError(errors, property, elementClassName) {
             if (errors.hasOwnProperty(property)) {
@@ -255,7 +257,7 @@
                 })
             })
 
-            $(document).on('click', '.review', function (event) {
+            $(document).on('click', '.product-reviews', function (event) {
                 event.preventDefault();
 
                 window.location.href = '#reviews';
@@ -266,13 +268,17 @@
                 $.ajax('/reviews?id=' + reviewableIdProduct + '&type=' + reviewType, {
                     dataType: 'json',
                     success: function (response) {
-                        $('.list').append(renderReviewsList(response));
+                        $('.list').html(renderReviewsList(response));
                     }
                 });
             })
 
-            $(document).on('click', '.add-review', function (event) {
+            $(document).on('click', '.add-product-review', function (event) {
                 event.preventDefault();
+
+                if (reviewType != 'product') {
+                    return;
+                }
 
                 clearError('rating-error-info');
                 clearError('title-error-info');
@@ -281,10 +287,80 @@
                 reviewType = 'product';
 
                 var addReview = new FormData();
-                addReview.append('rating', $('input[name=rating]:checked', '#addReview').val());
-                addReview.append('title', $('#title').val());
-                addReview.append('description', $('#description').val());
+                addReview.append('rating', $('input[name=rating]:checked', '.addReview').val());
+                addReview.append('title', $('.title-review').val());
+                addReview.append('description', $('.description-review').val());
                 addReview.append('reviewable_id', reviewableIdProduct);
+                addReview.append('reviewable_type', reviewType);
+
+                $.ajax('/reviews', {
+                    type: 'post',
+                    dataType: 'json',
+                    data: addReview,
+                    contentType: false,
+                    processData: false,
+                    success: function (response) {
+                        $('.list').append(renderReviewsList([response]));
+                    },
+                    error: function (xhr) {
+                        var errors = JSON.parse(xhr.responseText).errors;
+
+                        hasError(errors, 'rating', 'rating-error-info');
+                        hasError(errors, 'title', 'title-error-info');
+                        hasError(errors, 'description', 'description-error-info');
+                    }
+                })
+            })
+
+            $(document).on('click', '.del-prod-review', function (event) {
+                event.preventDefault();
+
+                var id = $(event.target).data('id');
+
+                $.ajax('/review/' + id, {
+                    type: 'delete',
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    success: function () {
+                        $(event.target).parent().parent().parent().remove();
+                    }
+                })
+            })
+
+            $(document).on('click', '.order-reviews', function (event) {
+                event.preventDefault();
+
+                window.location.href = '#reviews';
+
+                reviewableIdOrder = $(event.target).data('id');
+                reviewType = 'order';
+
+                $.ajax('/reviews?id=' + reviewableIdOrder + '&type=' + reviewType, {
+                    dataType: 'json',
+                    success: function (response) {
+                        $('.list').html(renderReviewsList(response));
+                    }
+                });
+            })
+
+            $(document).on('click', '.add-order-review', function (event) {
+                event.preventDefault();
+
+                if (reviewType != 'order') {
+                    return;
+                }
+
+                clearError('rating-error-info');
+                clearError('title-error-info');
+                clearError('description-error-info');
+
+                // reviewType = 'order';
+
+                var addReview = new FormData();
+                addReview.append('rating', $('input[name=rating]:checked', '.addReview').val());
+                addReview.append('title', $('.title-review').val());
+                addReview.append('description', $('.description-review').val());
+                addReview.append('reviewable_id', reviewableIdOrder);
                 addReview.append('reviewable_type', reviewType);
 
                 $.ajax('/reviews', {
@@ -313,7 +389,7 @@
                     '<th>' + __('Description') + '</th>',
                     '<th>' + __('Price') + '</th>',
                     '<th>' + __('Product Image') + '</th>',
-                    page == 'products' ? '<th>' + __('Edit') + '</th>' + '<th>' + __('Delete') + '</th>' :
+                    page == 'products' ? '<th>' + __('Edit') + '</th>' + '<th>' + __('Delete') + '</th>' + '<th>' + __('Reviews') + '</th>' :
                         page == 'index' ? '<th>' + __('Add to cart') + '</th>' + '<th>' + __('Reviews') + '</th>' : '<th>' + __('Delete') + '</th>',
                     '</tr>'
                 ].join('');
@@ -331,13 +407,16 @@
                             '</td>' +
                             '<td>' +
                             '<button class="btn btn-danger btn-sm delete-product" data-id="' + product.id + '">' + __('Delete') + '</button>' +
+                            '</td>' +
+                            '<td>' +
+                            '<button class="btn btn-secondary btn-sm product-reviews" data-id="' + product.id + '">' + __('Reviews') + '</button>' +
                             '</td>' :
                             page == 'index' ?
                                 '<td>' +
                                 '<button class="btn btn-secondary btn-sm add-to-cart" data-id="' + product.id + '">' + __('Add') + '</button>' +
                                 '</td>' +
                                 '<td>' +
-                                '<button class="btn btn-secondary btn-sm review" data-id="' + product.id + '">' + __('Reviews') + '</button>' +
+                                '<button class="btn btn-secondary btn-sm product-reviews" data-id="' + product.id + '">' + __('Reviews') + '</button>' +
                                 '</td>' :
                                 '<td>' +
                                 '<button class="btn btn-secondary delete-from-cart" data-id="' + product.id + '">' + __('Delete') + '</button>' +
@@ -356,6 +435,7 @@
                     '<th>' + __('Customer Comments') + '</th>',
                     '<th>' + __('Product Price Sum') + '</th>',
                     '<th>' + __('Order Details') + '</th>',
+                    '<th>' + __('Reviews') + '</th>',
                     '</tr>'
                 ].join('');
 
@@ -366,8 +446,11 @@
                         '<td>' + __(order.customer_details) + '</td>',
                         '<td>' + __(order.customer_comments) + '</td>',
                         '<td>' + __(order.product_price_sum) + '</td>',
-                        '<td>' +
+                        '<td>',
                         '<button class="btn btn-success btn-sm order-details" data-id="' + order.id + '">' + __('Order Details') + '</button>' +
+                        '</td>',
+                        '<td>',
+                        '<button class="btn btn-light btn-sm order-reviews" data-id="' + order.id + '">' + __('Reviews') + '</button>' +
                         '</td>',
                         '</tr>'
                     ].join('');
@@ -429,7 +512,7 @@
                 html = [].join('');
 
                 $.each(reviews, function (key, review) {
-                    html += [
+                    newHtml = [
                         '<div class="card" style="width: 80%; margin: 10px auto;">' +
                             '<div class="card-body">',
                                 '<div>',
@@ -444,9 +527,15 @@
                                     '<span class="mr-1"><b>' + __('Description') + '</b></span>',
                                     '<span>' + review.description + '</span>',
                                 '</div>',
-                            '</div>',
-                        '</div>'
-                    ].join('');
+                    ];
+                    if (loggedInAdmin === 1) {
+                        newHtml.push('<div class="btn-delete-review">');
+                        newHtml.push('<button class="btn btn-sm btn-danger del-prod-review" data-id="' + review.id + '">' + __('Delete') + '</button>');
+                        newHtml.push('</div>');
+                    }
+                    newHtml.push('</div>');
+                    newHtml.push('</div>');
+                    html += newHtml.join('');
                 });
 
                 return html;
@@ -766,13 +855,13 @@
     <div class="list"></div>
 
     <div class="d-flex justify-content-center">
-        <form id="addReview">
+        <form class="addReview">
             <div>
                 <div>
                     <label for="rating"><b>{{ __('view.rating') }}</b></label>
                 </div>
 
-                <div class="input-group mb-3">
+                <div class="form-group mb-3">
                     <div class="input-group-prepend">
                         <div class="input-group-text">
                             <input type="radio" name="rating" value="5" /> 5
@@ -794,9 +883,8 @@
                             <input type="radio" name="rating" value="1" /> 1
                         </div>
                     </div>
+                    <span class="rating-error-info text-danger" style="display: none;"></span>
                 </div>
-
-                <span class="rating-error-info text-danger" style="display: none;"></span>
             </div>
 
             <div class="form-group">
@@ -805,7 +893,7 @@
                 </div>
 
                 <input type="text"
-                       class="form-control"
+                       class="form-control title-review"
                        id="title"
                        name="title"
                        placeholder="{{ __('view.label.title') }}">
@@ -819,7 +907,7 @@
                 </div>
 
                 <input name="description"
-                       class="form-control"
+                       class="form-control description-review"
                        id="description"
                        placeholder="{{ __('view.label.description') }}">
 
@@ -827,7 +915,7 @@
             </div>
 
             <div class="text-center mb-5">
-                <button class="btn btn-primary btn-sm add-review" type="submit">{{ __('view.addReview') }}</button>
+                <button class="btn btn-primary btn-sm add-product-review add-order-review" type="submit">{{ __('view.addReview') }}</button>
             </div>
         </form>
     </div>

@@ -63,9 +63,13 @@ class ReviewController extends Controller
         return redirect()->back();
     }
 
-    public function destroy($review)
+    public function destroy($review, Request $request)
     {
         Review::findOrFail($review)->delete();
+
+        if ($request->wantsJson() || $request->expectsJson()) {
+            return response()->json([]);
+        }
 
         return redirect()->back();
     }

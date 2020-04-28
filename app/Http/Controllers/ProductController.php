@@ -58,8 +58,10 @@ class ProductController extends Controller
         ]);
 
         if ($request->hasFile('image_path')) {
-            //Delete old image
-            Storage::disk('public')->delete($product->image_path);
+            if ($product->image_path != '/images/default.jpg') {
+                //Delete old image
+                Storage::disk('public')->delete($product->image_path);
+            }
 
             $imagePath = $request->file('image_path')->store('images', 'public');
         } else {
@@ -72,6 +74,10 @@ class ProductController extends Controller
             'price' => $request->input('price'),
             'image_path' => $imagePath,
         ]);
+
+        if ($request->wantsJson() || $request->expectsJson()) {
+            return response()->json($product->fresh(), 200);
+        }
 
         return redirect()->route('products.index');
     }
