@@ -16,6 +16,8 @@
         var editedProduct = {};
         var products = [];
         var orders = [];
+        var reviewType = '';
+        var reviewableIdProduct = '';
         var loggedIn = {{ auth()->check() ? '1' : '0' }};
 
         function hasError(errors, property, elementClassName) {
@@ -258,15 +260,50 @@
 
                 window.location.href = '#reviews';
 
-                var id = $(event.target).data('id');
+                reviewableIdProduct = $(event.target).data('id');
+                reviewType = 'product';
 
-                $.ajax('/reviews?id=' + id + '&type=product', {
+                $.ajax('/reviews?id=' + reviewableIdProduct + '&type=' + reviewType, {
                     dataType: 'json',
                     success: function (response) {
-                        $('.list').html(renderReviewsList(response));
-                        console.log(response)
+                        $('.list').append(renderReviewsList(response));
                     }
                 });
+            })
+
+            $(document).on('click', '.add-review', function (event) {
+                event.preventDefault();
+
+                clearError('rating-error-info');
+                clearError('title-error-info');
+                clearError('description-error-info');
+
+                reviewType = 'product';
+
+                var addReview = new FormData();
+                addReview.append('rating', $('input[name=rating]:checked', '#addReview').val());
+                addReview.append('title', $('#title').val());
+                addReview.append('description', $('#description').val());
+                addReview.append('reviewable_id', reviewableIdProduct);
+                addReview.append('reviewable_type', reviewType);
+
+                $.ajax('/reviews', {
+                    type: 'post',
+                    dataType: 'json',
+                    data: addReview,
+                    contentType: false,
+                    processData: false,
+                    success: function (response) {
+                        $('.list').append(renderReviewsList([response]));
+                    },
+                    error: function (xhr) {
+                        var errors = JSON.parse(xhr.responseText).errors;
+
+                        hasError(errors, 'rating', 'rating-error-info');
+                        hasError(errors, 'title', 'title-error-info');
+                        hasError(errors, 'description', 'description-error-info');
+                    }
+                })
             })
 
             function renderList(products, page) {
@@ -297,10 +334,10 @@
                             '</td>' :
                             page == 'index' ?
                                 '<td>' +
-                                '<button class="btn btn-secondary add-to-cart" data-id="' + product.id + '">' + __('Add') + '</button>' +
+                                '<button class="btn btn-secondary btn-sm add-to-cart" data-id="' + product.id + '">' + __('Add') + '</button>' +
                                 '</td>' +
                                 '<td>' +
-                                '<button data-id="' + product.id + '" class="btn btn-secondary review">' + __('Add Review') + '</button>' +
+                                '<button class="btn btn-secondary btn-sm review" data-id="' + product.id + '">' + __('Reviews') + '</button>' +
                                 '</td>' :
                                 '<td>' +
                                 '<button class="btn btn-secondary delete-from-cart" data-id="' + product.id + '">' + __('Delete') + '</button>' +
@@ -394,20 +431,20 @@
                 $.each(reviews, function (key, review) {
                     html += [
                         '<div class="card" style="width: 80%; margin: 10px auto;">' +
-                        '<div class="card-body">',
-                        '<div>',
-                        '<span class="mr-1"><b>' + __('Rating') + '</b></span>',
-                        '<span>' + review.rating + '</span>',
-                        '</div>',
-                        '<div>',
-                        '<span class="mr-1"><b>' + __('Title') + '</b></span>',
-                        '<span>' + review.title + '</span>',
-                        '</div>',
-                        '<div>',
-                        '<span class="mr-1"><b>' + __('Description') + '</b></span>',
-                        '<span>' + review.description + '</span>',
-                        '</div>',
-                        '</div>',
+                            '<div class="card-body">',
+                                '<div>',
+                                    '<span class="mr-1"><b>' + __('Rating') + '</b></span>',
+                                    '<span>' + review.rating + '</span>',
+                                '</div>',
+                                '<div>',
+                                    '<span class="mr-1"><b>' + __('Title') + '</b></span>',
+                                    '<span>' + review.title + '</span>',
+                                '</div>',
+                                '<div>',
+                                    '<span class="mr-1"><b>' + __('Description') + '</b></span>',
+                                    '<span>' + review.description + '</span>',
+                                '</div>',
+                            '</div>',
                         '</div>'
                     ].join('');
                 });
@@ -738,31 +775,28 @@
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
                         <div class="input-group-text">
-                            <input type="radio" name="rating" id="rating"
-                                   value="5" {{ old('rating') == "5" ? 'checked' : '' }}/> 5
+                            <input type="radio" name="rating" value="5" /> 5
                         </div>
 
                         <div class="input-group-text">
-                            <input type="radio" name="rating" id="rating"
-                                   value="4" {{ old('rating') == "4" ? 'checked' : '' }}/> 4
+                            <input type="radio" name="rating" value="4" /> 4
                         </div>
 
                         <div class="input-group-text">
-                            <input type="radio" name="rating" id="rating"
-                                   value="3" {{ old('rating') == "3" ? 'checked' : '' }}/> 3
+                            <input type="radio" name="rating" value="3" /> 3
                         </div>
 
                         <div class="input-group-text">
-                            <input type="radio" name="rating" id="rating"
-                                   value="2" {{ old('rating') == "2" ? 'checked' : '' }}/> 2
+                            <input type="radio" name="rating" value="2" /> 2
                         </div>
 
                         <div class="input-group-text">
-                            <input type="radio" name="rating" id="rating"
-                                   value="1" {{ old('rating') == "1" ? 'checked' : '' }}/> 1
+                            <input type="radio" name="rating" value="1" /> 1
                         </div>
                     </div>
                 </div>
+
+                <span class="rating-error-info text-danger" style="display: none;"></span>
             </div>
 
             <div class="form-group">
@@ -774,9 +808,9 @@
                        class="form-control"
                        id="title"
                        name="title"
-                       value="{{ old('title') }}"
                        placeholder="{{ __('view.label.title') }}">
 
+                <span class="title-error-info text-danger" style="display: none;"></span>
             </div>
 
             <div class="form-group">
@@ -787,12 +821,13 @@
                 <input name="description"
                        class="form-control"
                        id="description"
-                       value="{{ old('description') }}"
                        placeholder="{{ __('view.label.description') }}">
+
+                <span class="description-error-info text-danger" style="display: none;"></span>
             </div>
 
             <div class="text-center mb-5">
-                <button class="btn btn-primary btn-sm" type="submit" name="review">{{ __('view.addReview') }}</button>
+                <button class="btn btn-primary btn-sm add-review" type="submit">{{ __('view.addReview') }}</button>
             </div>
         </form>
     </div>

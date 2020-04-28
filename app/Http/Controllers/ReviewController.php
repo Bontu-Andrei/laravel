@@ -56,6 +56,10 @@ class ReviewController extends Controller
         $review->reviewable()->associate($item);
         $review->save();
 
+        if ($request->wantsJson() || $request->expectsJson()) {
+            return response()->json($review);
+        }
+
         return redirect()->back();
     }
 
