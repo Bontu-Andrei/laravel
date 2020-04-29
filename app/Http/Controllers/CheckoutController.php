@@ -53,6 +53,10 @@ class CheckoutController extends Controller
             ]);
         }
 
+        if ($request->wantsJson() || $request->expectsJson()) {
+            return response()->json($data);
+        }
+
         return redirect()->route('cart');
     }
 }

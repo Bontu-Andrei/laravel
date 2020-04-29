@@ -22,22 +22,6 @@
         var loggedIn = {{ auth()->check() ? '1' : '0' }};
         var loggedInAdmin = {{ auth()->check() && auth()->user()->is_admin ? '1' : '0' }};
 
-        function hasError(errors, property, elementClassName) {
-            if (errors.hasOwnProperty(property)) {
-                var $element = $('.' + elementClassName);
-
-                $element.text(errors[property][0]);
-                $element.show();
-            }
-        }
-
-        function clearError(elementClassName) {
-            var $element = $('.' + elementClassName);
-
-            $element.text('');
-            $element.hide();
-        }
-
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -95,9 +79,10 @@
                         customer_comments: $('.comments').val(),
                     },
                     dataType: 'json',
-                    success: function () {
-                        alert('Checkout success!');
-                        window.location.reload();
+                    success: function (response) {
+                        $('.checkout-data').html(renderCheckoutDetails(response));
+                        window.location.href = '#checkout';
+                        console.log(response);
                     },
                     error: function (xhr) {
                         var errors = JSON.parse(xhr.responseText).errors;
@@ -543,6 +528,37 @@
                 return html;
             }
 
+            function renderCheckoutDetails(response) {
+                html = [].join('');
+
+                html += [
+                    '<p class="lead">' + response.customer_name + __(', you will receive an order confirmation email with details of your order.') + '</p>',
+                    '<hr class="my-4">',
+                    '<span><b>' + __('Your contact details:') + '</b></span>',
+                    '<p>' + response.contact_details + '</p>',
+                    '<span><b>' + __('Your comments about order:') + '</b></span>',
+                    '<p>' + response.customer_comments + '</p>',
+                ].join('');
+
+                return html;
+            }
+
+            function hasError(errors, property, elementClassName) {
+                if (errors.hasOwnProperty(property)) {
+                    var $element = $('.' + elementClassName);
+
+                    $element.text(errors[property][0]);
+                    $element.show();
+                }
+            }
+
+            function clearError(elementClassName) {
+                var $element = $('.' + elementClassName);
+
+                $element.text('');
+                $element.hide();
+            }
+
             /**
              * URL hash change handler
              */
@@ -638,6 +654,9 @@
                         break;
                     case '#reviews':
                         $('.reviews').show();
+                        break;
+                    case '#checkout':
+                        $('.checkout').show();
                         break;
                     default:
                         // If all else fails, always default to index
@@ -919,6 +938,20 @@
                 <button class="btn btn-primary btn-sm add-product-review add-order-review" type="submit">{{ __('view.addReview') }}</button>
             </div>
         </form>
+    </div>
+</div>
+
+<!-- The checkout-success page -->
+<div class="page checkout container">
+    @include('partials.js-navbar')
+
+    <div class="vh-100 d-flex">
+        <div class="jumbotron my-auto mx-auto">
+            <img src="/storage/images/check-icon.png" class="mx-auto d-block" width="200px;" alt="{{ __('image_alt_icon') }}">
+            <h1 class="display-4">{{ __('view.thx') }}</h1>
+            <div class="checkout-data"></div>
+            <a class="btn btn-primary btn-lg" href="#index">{{ __('view.continue') }}</a>
+        </div>
     </div>
 </div>
 </body>

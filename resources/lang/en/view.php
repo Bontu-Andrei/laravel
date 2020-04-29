@@ -12,6 +12,7 @@ return [
     ],
 
     'image_alt' => 'product_image',
+    'image_alt_icon' => 'check_image',
     'image' => 'Product Image',
 
     'label' => [
@@ -60,5 +61,7 @@ return [
     //Javascript section
     'user' => 'Username',
     'password' => 'Password',
-    'email' => 'E-mail Address'
+    'email' => 'E-mail Address',
+    'thx' => 'Thank you for your purchase!',
+    'continue' => 'Continue Shopping',
 ];
