@@ -82,7 +82,6 @@
                     success: function (response) {
                         $('.checkout-data').html(renderCheckoutDetails(response));
                         window.location.href = '#checkout';
-                        console.log(response);
                     },
                     error: function (xhr) {
                         var errors = JSON.parse(xhr.responseText).errors;
