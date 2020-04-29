@@ -356,8 +356,6 @@
                 clearError('title-error-info');
                 clearError('description-error-info');
 
-                // reviewType = 'order';
-
                 var addReview = new FormData();
                 addReview.append('rating', $('input[name=rating]:checked', '.addReview').val());
                 addReview.append('title', $('.title-review').val());
@@ -640,7 +638,6 @@
                         break;
                     case '#reviews':
                         $('.reviews').show();
-
                         break;
                     default:
                         // If all else fails, always default to index
