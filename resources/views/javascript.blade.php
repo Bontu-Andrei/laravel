@@ -301,6 +301,8 @@
                     processData: false,
                     success: function (response) {
                         $('.list').append(renderReviewsList([response]));
+                        $('.title-review').val('');
+                        $('.description-review').val('');
                     },
                     error: function (xhr) {
                         var errors = JSON.parse(xhr.responseText).errors;
@@ -371,6 +373,8 @@
                     processData: false,
                     success: function (response) {
                         $('.list').append(renderReviewsList([response]));
+                        $('.title-review').val('');
+                        $('.description-review').val('');
                     },
                     error: function (xhr) {
                         var errors = JSON.parse(xhr.responseText).errors;
